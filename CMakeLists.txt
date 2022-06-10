@@ -6,7 +6,7 @@ option(build_tests "Build all of own tests" OFF)
 
 set(CMAKE_VERBOSE_MAKEFILE TRUE)
 
-set(CMAKE_C_FLAGS           "-std=gnu11 -W -Wall -Wextra -Wparentheses -Wshadow -funsigned-char")
+set(CMAKE_C_FLAGS           "-std=gnu18 -W -Wall -Wextra -Wparentheses -Wshadow -funsigned-char")
 set(CMAKE_C_FLAGS_DEBUG     "-g -O0 -DNDEBUG")
 set(CMAKE_C_FLAGS_RELEASE   "-O3")
 
@@ -49,7 +49,7 @@ add_subdirectory(thirdparty/arraylist)
 add_subdirectory(thirdparty/c-logger)
 
 set(CMAKE_POLICY_DEFAULT_CMP0077 NEW)
-#set(BUILD_STATIC_LIBS ON)
+set(BUILD_STATIC_LIBS ON)
 set(BUILD_SHARED_LIBS OFF)
 add_subdirectory(thirdparty/json-c)
 

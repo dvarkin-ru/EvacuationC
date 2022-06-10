@@ -55,6 +55,9 @@ static void output_footer(FILE *fp, bim_t *bim);
 
 int main (int argc, char** argv)
 {
+#ifdef _WIN32
+		system("chcp 65001");
+#endif
     // Обработка аргументов командной строки
     char *input_file = NULL;
     char *output_file = NULL;
