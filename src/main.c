@@ -32,6 +32,10 @@ void applying_scenario_bim_params(bim_t* bim, const bim_cfg_scenario_t* cfg_scen
 
 int main (int argc, char** argv)
 {
+#ifdef _WIN32
+    system("chcp 65001");
+#endif
+
     const cli_params_t       *cli_params       = read_cl_args(argc, argv);
     const bim_cfg_scenario_t *bim_cfg_scenario = bim_cfg_load(cli_params->scenario_file);
 
