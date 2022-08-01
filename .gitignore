@@ -14,12 +14,19 @@
 
 !CMakeLists.txt
 
+!src/
 !src/*
 
+!res/
 !res/*.json
 
-!thirdparty/*
+!thirdparty/
+!thirdparty/arraylist/
+!thirdparty/arraylist/*
+!thirdparty/triangle/
+!thirdparty/triangle/*
 
+!test/
 !test/*.c
 !test/*.h
 !test/CMakeLists.txt
