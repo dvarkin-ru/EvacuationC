@@ -32,6 +32,7 @@ void applying_scenario_bim_params(bim_t* bim, const bim_cfg_scenario_t* cfg_scen
 
 int main (int argc, char** argv)
 {
+// TODO: разобраться с кодировкой в windows
 #ifdef _WIN32
     system("chcp 65001");
 #endif

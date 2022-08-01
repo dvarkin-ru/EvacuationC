@@ -4061,9 +4061,6 @@ struct memorypool *pool;
     pool->maxitems++;
   }
   pool->items++;
-
-  int s = sizeof(unsigned long long);
-
   return newitem;
 }
 
@@ -7499,7 +7496,7 @@ struct behavior *b;
 /*  WARNING:  This routine is designed for convex triangulations, and will   */
 /*  not generally work after the holes and concavities have been carved.     */
 /*  However, it can still be used to find the circumcenter of a triangle, as */
-/*  long long as the search is begun from the triangle in question.               */
+/*  long as the search is begun from the triangle in question.               */
 /*                                                                           */
 /*****************************************************************************/
 
@@ -8713,7 +8710,7 @@ int triflaws;
             } else {
               /* Take the average of the two triangles' area constraints.    */
               /*   This prevents small area constraints from migrating a     */
-              /*   long long, long long way from their original location due to flips. */
+              /*   long, long way from their original location due to flips. */
               area = 0.5 * (areabound(top) + areabound(horiz));
             }
             setareabound(top, area);
@@ -15440,7 +15437,7 @@ struct behavior *b;
         trilongest2 = edgelength[i];
       }
       if (edgelength[i] > longest) {
-          longest = edgelength[i];
+        longest = edgelength[i];
       }
       if (edgelength[i] < shortest) {
         shortest = edgelength[i];
