@@ -5,14 +5,20 @@
 
 !.editorconfig
 
+!evacuationc.conf
+!LICENSE
+!logger.conf
+!scenario.json
+
+!README.md
+
 !CMakeLists.txt
 
-!src/
+!src/*
 
 !res/*.json
 
-!thirdparty/arraylist/
-!thirdparty/triangle/
+!thirdparty/*
 
 !test/*.c
 !test/*.h
