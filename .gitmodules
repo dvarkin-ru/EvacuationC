@@ -6,3 +6,6 @@
 	path = thirdparty/c-logger
 	url = https://github.com/yksz/c-logger.git
 	branch = v0.4.2
+[submodule "thirdparty/corrosion"]
+	path = thirdparty/corrosion
+	url = https://github.com/corrosion-rs/corrosion.git
