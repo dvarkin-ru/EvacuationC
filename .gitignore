@@ -8,28 +8,12 @@
 !CMakeLists.txt
 
 !src/
-!src/*.c
-!src/*.h
-!src/CMakeLists.txt
-!src/bim/
-!src/bim/*.c
-!src/bim/*.h
-!src/bim/CMakeLists.txt
 
-!res/
 !res/*.json
 
-!thirdparty/
 !thirdparty/arraylist/
-!thirdparty/arraylist/*.c
-!thirdparty/arraylist/*.h
-!thirdparty/arraylist/CMakeLists.txt
 !thirdparty/triangle/
-!thirdparty/triangle/*.c
-!thirdparty/triangle/*.h
-!thirdparty/triangle/CMakeLists.txt
 
-!test/
 !test/*.c
 !test/*.h
 !test/CMakeLists.txt
