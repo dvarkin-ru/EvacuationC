@@ -51,6 +51,7 @@ target_link_libraries(${PROJECT_NAME}
 add_subdirectory(thirdparty/triangle)
 add_subdirectory(thirdparty/arraylist)
 add_subdirectory(thirdparty/c-logger)
+add_subdirectory(thirdparty/corrosion)
 
 set(CMAKE_POLICY_DEFAULT_CMP0077 NEW)
 #set(BUILD_STATIC_LIBS ON)
