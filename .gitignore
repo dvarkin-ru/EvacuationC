@@ -21,10 +21,7 @@
 !res/*.json
 
 !thirdparty/
-!thirdparty/arraylist/
-!thirdparty/arraylist/*
-!thirdparty/triangle/
-!thirdparty/triangle/*
+!thirdparty/**/*
 
 !test/
 !test/*.c
