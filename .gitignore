@@ -3,6 +3,8 @@
 !.gitignore
 !.gitmodules
 
+!.editorconfig
+
 !CMakeLists.txt
 
 !src/
