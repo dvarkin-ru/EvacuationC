@@ -24,20 +24,20 @@
 #include "bim_tools.h"
 #include "bim_graph.h"
 #include "bim_evac.h"
-#include "bim_cli.h"
+#include "bim_cli/bim_cli.h"
 #include "bim_configure.h"
 #include "bim_output.h"
 
 void applying_scenario_bim_params(bim_t* bim, const bim_cfg_scenario_t* cfg_scenario);
 
-int main (int argc, char** argv)
+int main ()
 {
 // TODO: разобраться с кодировкой в windows
 #ifdef _WIN32
     system("chcp 65001");
 #endif
 
-    const cli_params_t       *cli_params       = read_cl_args(argc, argv);
+    const cli_params_t       *cli_params       = read_cl_args();
     const bim_cfg_scenario_t *bim_cfg_scenario = bim_cfg_load(cli_params->scenario_file);
 
     // Настройки с-logger
@@ -130,7 +130,7 @@ int main (int argc, char** argv)
                 bim_zone_t *zone = zones->data[i];
                 if (zone->is_visited)
                 {
-                   num_of_people += zone->numofpeople;
+                    num_of_people += zone->numofpeople;
                 }
             }
 
@@ -161,8 +161,6 @@ int main (int argc, char** argv)
 #ifdef _WIN32
     system("chcp 866");
 #endif
-
-    return 0;
 }
 
 void applying_scenario_bim_params(bim_t* bim, const bim_cfg_scenario_t* cfg_scenario)

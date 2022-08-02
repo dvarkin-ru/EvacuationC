@@ -15,7 +15,7 @@
 !CMakeLists.txt
 
 !src/
-!src/*
+!src/**/*
 
 !res/
 !res/*.json
