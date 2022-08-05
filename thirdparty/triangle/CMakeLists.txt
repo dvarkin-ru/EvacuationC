@@ -7,16 +7,20 @@ add_library(triangle
         triangle.c triangle.h
 )
 
-target_compile_options(triangle
-    PRIVATE
-        -Wno-unused-variable
-        -Wno-unused-but-set-variable
-        -Wno-pedantic
-        -Wno-unused-parameter
-        -Wno-sign-compare
-        -Wno-maybe-uninitialized
-        -Wno-missing-prototypes
-)
+if(MSVC)
+    target_compile_options(triangle PRIVATE "/Wall")
+else()
+    target_compile_options(triangle
+        PRIVATE
+            -Wno-unused-variable
+            -Wno-unused-but-set-variable
+            -Wno-pedantic
+            -Wno-unused-parameter
+            -Wno-sign-compare
+            -Wno-maybe-uninitialized
+            -Wno-missing-prototypes
+    )
+endif()
 
 if(UNIX)
     target_compile_definitions(triangle PRIVATE -DLINUX)

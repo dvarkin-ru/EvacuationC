@@ -9,3 +9,4 @@ edition = "2021"
 cli = { path = "src/cli" }
 configuration = { path = "src/configuration" }
 json_object = { path = "src/json_object" }
+polygon_tools = { path = "src/polygon_tools" }

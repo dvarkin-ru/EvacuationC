@@ -6,7 +6,11 @@ option(build_tests "Build all of own tests" OFF)
 
 set(CMAKE_VERBOSE_MAKEFILE TRUE)
 
-set(CMAKE_C_FLAGS           "-std=gnu18 -Wall -D_GNU_SOURCE -Wextra -Wparentheses -Wshadow -funsigned-char")
+if(MSVC)
+    set(CMAKE_C_FLAGS "/Wall")
+else()
+    set(CMAKE_C_FLAGS "-std=gnu18 -Wall -D_GNU_SOURCE -Wparentheses -Wshadow -funsigned-char")
+endif()
 set(CMAKE_C_FLAGS_DEBUG     "-g -O0")
 #set(CMAKE_C_FLAGS_DEBUG     "${CMAKE_C_FLAGS_DEBUG} -fsanitize=address -fsanitize=pointer-subtract -fsanitize=shift")
 set(CMAKE_C_FLAGS_RELEASE   "-O3 -DNDEBUG")
