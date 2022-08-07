@@ -21,6 +21,7 @@
 #include "loggerconf.h"
 
 #include "bim_json_object.h"
+#include "bim_json_object/src/bim_json_object.h"
 #include "bim_tools.h"
 #include "bim_graph.h"
 #include "bim_evac.h"
@@ -51,6 +52,10 @@ int main ()
         // Чтение файла и разворачивание его в структуру
         LOG_TRACE("Use module `bim_json_object`. Read the file of bim and create a programming structure");
         const bim_json_object_t * bim_json = bim_json_new(bim_cfg_scenario->bim_jsons[bim_idx].x);
+
+        // test
+        const bim_json_object_t_rust * bim_json_object = bim_json_new_rust(bim_cfg_scenario->bim_jsons[bim_idx].x);
+
         {
             LOG_TRACE("Name of building: %s", bim_json->name);
 

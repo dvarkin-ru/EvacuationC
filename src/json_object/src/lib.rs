@@ -66,7 +66,8 @@ pub struct BuildingStruct {
 	pub levels: Vec<Level>
 }
 
-pub fn parse_building_from_json(path_to_file: &String) -> Result<BuildingStruct, Box<dyn Error>> {
+#[no_mangle]
+pub fn parse_building_from_json(path_to_file: &str) -> Result<BuildingStruct, Box<dyn Error>> {
 	let json_content = fs::read_to_string(path_to_file).unwrap_or_else(|err| {
 		eprintln!("Ошибка чтения файла конфигурации здания {}: {}", path_to_file, err);
 		process::exit(1);

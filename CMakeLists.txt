@@ -22,6 +22,7 @@ endif()
 # corrosion
 add_subdirectory(thirdparty/corrosion)
 corrosion_import_crate(MANIFEST_PATH src/bim_cli/Cargo.toml)
+corrosion_import_crate(MANIFEST_PATH src/bim_json_object/Cargo.toml)
 
 add_executable(${PROJECT_NAME}
     src/bim_tools.c         src/bim_tools.h
@@ -47,6 +48,7 @@ target_include_directories(${PROJECT_NAME}
 target_link_libraries(${PROJECT_NAME}
     PUBLIC
         bim_cli
+        bim_json_object
     PRIVATE
         logger_static
         triangle
