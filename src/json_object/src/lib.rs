@@ -67,7 +67,7 @@ pub struct BuildingStruct {
 }
 
 #[no_mangle]
-pub fn parse_building_from_json(path_to_file: &str) -> Result<BuildingStruct, Box<dyn Error>> {
+pub fn parse_building_from_json(path_to_file: &str) -> Result<Box<BuildingStruct>, Box<dyn Error>> {
 	let json_content = fs::read_to_string(path_to_file).unwrap_or_else(|err| {
 		eprintln!("Ошибка чтения файла конфигурации здания {}: {}", path_to_file, err);
 		process::exit(1);
@@ -78,5 +78,5 @@ pub fn parse_building_from_json(path_to_file: &str) -> Result<BuildingStruct, Bo
 		process::exit(1);
 	});
 
-	Ok(data)
+	Ok(Box::new(data))
 }

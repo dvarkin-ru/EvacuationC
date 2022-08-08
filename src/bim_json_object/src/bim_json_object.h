@@ -11,7 +11,12 @@ typedef struct bim_json_address_t_rust {
   const char *add_info;
 } bim_json_address_t_rust;
 
+typedef struct uuid_t_rust {
+  const char *x;
+} uuid_t_rust;
+
 typedef struct bim_json_element_t_rust {
+  struct uuid_t_rust uuid;
   const char *name;
 } bim_json_element_t_rust;
 

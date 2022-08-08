@@ -6,10 +6,10 @@ use libc::{c_char, c_ulonglong, c_double};
 use json_object::parse_building_from_json;
 
 // Количество символов в UUID + NUL символ
-/*#[repr(C)]
-pub struct uuid_t {
-	x: *const [char; 36 + 1]
-}*/
+#[repr(C)]
+pub struct uuid_t_rust {
+	x: *const c_char // массив из char заменён на обычную строку
+}
 
 #[repr(C)]
 /*pub enum bim_element_sign_t
@@ -27,7 +27,7 @@ pub struct uuid_t {
 // Структура, описывающая элемент
 #[repr(C)]
 pub struct bim_json_element_t_rust {
-	// uuid: uuid_t,            //< [JSON] UUID идентификатор элемента
+	uuid: uuid_t_rust,            //< [JSON] UUID идентификатор элемента
 	name: *const c_char,        //< [JSON] Название элемента
 	// polygon: polygon_t,      //< [JSON] Полигон элемента
 	// outputs: uuid_t,         //< [JSON] Массив UUID элементов, которые являются соседними
@@ -78,9 +78,9 @@ pub extern "C" fn bim_json_new_rust(path_to_file: *const c_char) -> *const bim_j
 			elements: {
 				let mut build_elements = level.build_elements.iter().map(|element| {
 					bim_json_element_t_rust {
-						// uuid: uuid_t {
-						// 	x: CString::new(element.uuid).unwrap().as_ptr() as *const char
-						// },
+						uuid: uuid_t_rust {
+							x: CString::new(element.id.clone()).unwrap().into_raw()
+						},
 						name: CString::new(element.name.clone()).unwrap().into_raw(),
 						// id: element.id,
 					}

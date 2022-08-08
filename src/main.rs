@@ -11,5 +11,7 @@ fn main() {
 	for building_filename in scenario.files {
 		let building = parse_building_from_json(&building_filename)
 			.expect("Не удалось прочитать файл здания");
+
+		println!("{:#?}", &building_filename);
 	}
 }
