@@ -32,7 +32,7 @@ pub struct bim_json_element_t_rust {
 	// polygon: polygon_t,      //< [JSON] Полигон элемента
 	// outputs: uuid_t,         //< [JSON] Массив UUID элементов, которые являются соседними
 	id: c_ulonglong,                 //< Внутренний номер элемента (генерируется)
-	// numofpeople: i64,        //< [JSON] Количество людей в элементе
+	numofpeople: c_ulonglong,        //< [JSON] Количество людей в элементе
 	// numofoutputs: i64,       //< Количество связанных с текущим элементов
 	size_z: c_double,             //< [JSON] Высота элемента
 	z_level: c_double,            //< Уровень, на котором находится элемент
@@ -84,7 +84,8 @@ pub extern "C" fn bim_json_new_rust(path_to_file: *const c_char) -> *const bim_j
 						name: CString::new(element.name.clone()).unwrap().into_raw(),
 						id: c_ulonglong::try_from(i).unwrap(),
 						size_z: element.size_z,
-						z_level: level.z_level
+						z_level: level.z_level,
+						numofpeople: element.number_of_people
 					}
 				}).collect::<Vec<bim_json_element_t_rust>>();
 
