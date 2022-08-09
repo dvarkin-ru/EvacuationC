@@ -5,24 +5,24 @@ use std::ffi::{CStr, CString};
 use libc::{c_char, c_ulonglong, c_double};
 use json_object::parse_building_from_json;
 
+#[repr(C)]
+pub enum bim_element_sign_t_rust
+{
+	ROOM_RUST,         //< Указывает, что элемент здания является помещением/комнатой
+	STAIRCASE_RUST,    //< Указывает, что элемент здания является лестницей
+	DOOR_WAY_RUST,     //< Указывает, что элемент здания является проемом (без дверного полотна)
+	DOOR_WAY_INT_RUST, //< Указывает, что элемент здания является дверью, которая соединяет
+					   // < два элемента: ROOM и ROOM или ROOM и STAIR
+	DOOR_WAY_OUT_RUST, //< Указывает, что элемент здания является эвакуационным выходом
+	OUTSIDE_RUST,      //< Указывает, что элемент является зоной вне здания
+	UNDEFINDED_RUST    //< Указывает, что тип элемента не определен
+}
+
 // Количество символов в UUID + NUL символ
 #[repr(C)]
 pub struct uuid_t_rust {
 	x: *const c_char // массив из char заменён на обычную строку
 }
-
-#[repr(C)]
-/*pub enum bim_element_sign_t
-{
-	ROOM,           //< Указывает, что элемент здания является помещением/комнатой
-	STAIRCASE,      //< Указывает, что элемент здания является лестницей
-	DOOR_WAY,       //< Указывает, что элемент здания является проемом (без дверного полотна)
-	DOOR_WAY_INT,   //< Указывает, что элемент здания является дверью, которая соединяет
-					//< два элемента: ROOM и ROOM или ROOM и STAIR
-	DOOR_WAY_OUT,   //< Указывает, что элемент здания является эвакуационным выходом
-	OUTSIDE,        //< Указывает, что элемент является зоной вне здания
-	UNDEFINDED      //< Указывает, что тип элемента не определен
-}*/
 
 // Структура, описывающая элемент
 #[repr(C)]
@@ -36,7 +36,7 @@ pub struct bim_json_element_t_rust {
 	numofoutputs: c_ulonglong,       //< Количество связанных с текущим элементов
 	size_z: c_double,             //< [JSON] Высота элемента
 	z_level: c_double,            //< Уровень, на котором находится элемент
-	// sign: bim_element_sign_t_rust //< [JSON] Тип элемента
+	sign: bim_element_sign_t_rust //< [JSON] Тип элемента
 }
 
 // Структура поля, описывающего географическое положение объекта
@@ -86,7 +86,14 @@ pub extern "C" fn bim_json_new_rust(path_to_file: *const c_char) -> *const bim_j
 						size_z: element.size_z,
 						z_level: level.z_level,
 						numofpeople: element.number_of_people,
-						numofoutputs: c_ulonglong::try_from(element.outputs.len()).unwrap()
+						numofoutputs: c_ulonglong::try_from(element.outputs.len()).unwrap(),
+						sign: match element.sign.as_str() {
+							"Staircase" => bim_element_sign_t_rust::STAIRCASE_RUST,
+							"DoorWay" => bim_element_sign_t_rust::DOOR_WAY_RUST,
+							"DoorWayInt" => bim_element_sign_t_rust::DOOR_WAY_INT_RUST,
+							"DoorWayOut" => bim_element_sign_t_rust::DOOR_WAY_OUT_RUST,
+							_ => bim_element_sign_t_rust::UNDEFINDED_RUST
+						}
 					}
 				}).collect::<Vec<bim_json_element_t_rust>>();
 

@@ -5,6 +5,16 @@
 #include <stdlib.h>
 
 
+typedef enum bim_element_sign_t_rust {
+  ROOM_RUST,
+  STAIRCASE_RUST,
+  DOOR_WAY_RUST,
+  DOOR_WAY_INT_RUST,
+  DOOR_WAY_OUT_RUST,
+  OUTSIDE_RUST,
+  UNDEFINDED_RUST,
+} bim_element_sign_t_rust;
+
 typedef struct bim_json_address_t_rust {
   const char *city;
   const char *street_address;
@@ -23,6 +33,7 @@ typedef struct bim_json_element_t_rust {
   unsigned long long numofoutputs;
   double size_z;
   double z_level;
+  enum bim_element_sign_t_rust sign;
 } bim_json_element_t_rust;
 
 typedef struct bim_json_level_t_rust {
