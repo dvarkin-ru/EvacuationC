@@ -62,4 +62,4 @@ typedef struct bim_json_object_t_rust {
   unsigned long long numoflevels;
 } bim_json_object_t_rust;
 
-const struct bim_json_object_t *bim_json_new_rust(const char *path_to_file);
+const bim_json_object_t *bim_json_new_rust(const char *path_to_file);

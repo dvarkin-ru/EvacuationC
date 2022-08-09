@@ -21,63 +21,63 @@ pub enum bim_element_sign_t_rust
 
 // Количество символов в UUID + NUL символ
 #[repr(C)]
-struct uuid_t_rust {
-	x: [c_char; 36 + 1] // массив из char заменён на обычную строку
+pub struct uuid_t_rust {
+	pub x: [c_char; 36 + 1] // массив из char заменён на обычную строку
 }
 
 #[repr(C)]
 pub struct point_t_rust
 {
-	x: c_double,
-	y: c_double
+	pub x: c_double,
+	pub y: c_double
 }
 
 #[repr(C)]
 pub struct polygon_t_rust
 {
-	numofpoints: c_ulonglong,
-	points: *mut point_t_rust
+	pub numofpoints: c_ulonglong,
+	pub points: *mut point_t_rust
 }
 
 // Структура, описывающая элемент
 #[repr(C)]
 pub struct bim_json_element_t_rust {
-	uuid: uuid_t_rust,            //< [JSON] UUID идентификатор элемента
-	name: *const c_char,          //< [JSON] Название элемента
-	polygon: *mut polygon_t_rust,      //< [JSON] Полигон элемента
-	outputs: *mut uuid_t_rust,    //< [JSON] Массив UUID элементов, которые являются соседними к элементу
-	id: c_ulonglong,              //< Внутренний номер элемента (генерируется)
-	numofpeople: c_ulonglong,     //< [JSON] Количество людей в элементе
-	numofoutputs: c_ulonglong,    //< Количество связанных с текущим элементов
-	size_z: c_double,             //< [JSON] Высота элемента
-	z_level: c_double,            //< Уровень, на котором находится элемент
-	sign: bim_element_sign_t_rust //< [JSON] Тип элемента
+	pub uuid: uuid_t_rust,            //< [JSON] UUID идентификатор элемента
+	pub name: *const c_char,          //< [JSON] Название элемента
+	pub polygon: *mut polygon_t_rust,      //< [JSON] Полигон элемента
+	pub outputs: *mut uuid_t_rust,    //< [JSON] Массив UUID элементов, которые являются соседними к элементу
+	pub id: c_ulonglong,              //< Внутренний номер элемента (генерируется)
+	pub numofpeople: c_ulonglong,     //< [JSON] Количество людей в элементе
+	pub numofoutputs: c_ulonglong,    //< Количество связанных с текущим элементов
+	pub size_z: c_double,             //< [JSON] Высота элемента
+	pub z_level: c_double,            //< Уровень, на котором находится элемент
+	pub sign: bim_element_sign_t_rust //< [JSON] Тип элемента
 }
 
 // Структура поля, описывающего географическое положение объекта
 #[repr(C)]
 pub struct bim_json_address_t_rust {
-	city: *const c_char,           //< [JSON] Название города
-	street_address: *const c_char, //< [JSON] Название улицы
-	add_info: *const c_char        //< [JSON] Дополнительная информация о местоположении объекта
+	pub city: *const c_char,           //< [JSON] Название города
+	pub street_address: *const c_char, //< [JSON] Название улицы
+	pub add_info: *const c_char        //< [JSON] Дополнительная информация о местоположении объекта
 }
 
 // Структура, описывающая этаж
 #[repr(C)]
 pub struct bim_json_level_t_rust {
-	name: *const c_char,                      //< [JSON] Название этажа
-	elements: *mut bim_json_element_t_rust, //< [JSON] Массив элементов, которые принадлежат этажу
-	z_level: c_double,                        //< [JSON] Высота этажа над нулевой отметкой
-	numofelements: c_ulonglong                //< Количство элементов на этаже
+	pub name: *const c_char,                      //< [JSON] Название этажа
+	pub elements: *mut bim_json_element_t_rust, //< [JSON] Массив элементов, которые принадлежат этажу
+	pub z_level: c_double,                        //< [JSON] Высота этажа над нулевой отметкой
+	pub numofelements: c_ulonglong                //< Количство элементов на этаже
 }
 
 // Структура, описывающая здание
 #[repr(C)]
 pub struct bim_json_object_t_rust {
-	address: *mut bim_json_address_t_rust, //< [JSON] Информация о местоположении объекта
-	name: *const c_char,                   //< [JSON] Название здания
-	levels: *mut bim_json_level_t_rust,    //< [JSON] Массив уровней здания
-	numoflevels: c_ulonglong               //< Количество уровней в здании
+	pub address: *mut bim_json_address_t_rust, //< [JSON] Информация о местоположении объекта
+	pub name: *const c_char,                   //< [JSON] Название здания
+	pub levels: *mut bim_json_level_t_rust,    //< [JSON] Массив уровней здания
+	pub numoflevels: c_ulonglong               //< Количество уровней в здании
 }
 
 #[allow(clippy::not_unsafe_ptr_arg_deref)]
@@ -87,7 +87,7 @@ pub extern "C" fn bim_json_new_rust(path_to_file: *const c_char) -> *const bim_j
 	let mut bim_element_rs_id: u64 = 0;
 	let mut bim_element_d_id: u64 = 0;
 
-	let bim_json_object = bim_json_object_t_rust {
+	let mut bim_json_object = bim_json_object_t_rust {
 		address: Box::into_raw(Box::new(bim_json_address_t_rust {
 			city: CString::new(building.address.city).unwrap().into_raw(),
 			street_address: CString::new(building.address.street_address).unwrap().into_raw(),
@@ -117,26 +117,31 @@ pub extern "C" fn bim_json_new_rust(path_to_file: *const c_char) -> *const bim_j
 								name: CString::new(element.name.clone()).unwrap().into_raw(),
 								id: match element.sign.as_str() { // TODO: сделать отсчёт id с нуля
 									"Room" => {
+										let id = bim_element_rs_id;
 										bim_element_rs_id += 1;
-										bim_element_rs_id
+										id
 									},
 									"Staircase" => {
+										let id = bim_element_rs_id;
 										bim_element_rs_id += 1;
-										bim_element_rs_id
+										id
 									},
 									"DoorWay" => {
+										let id = bim_element_d_id;
 										bim_element_d_id += 1;
-										bim_element_d_id
+										id
 									},
 									"DoorWayInt" => {
+										let id = bim_element_d_id;
 										bim_element_d_id += 1;
-										bim_element_d_id
+										id
 									},
 									"DoorWayOut" => {
+										let id = bim_element_d_id;
 										bim_element_d_id += 1;
-										bim_element_d_id
+										id
 									}
-									_ => 0
+									element_type => panic!("Неизвестный тип элемента здания: {}", element_type)
 								},
 								size_z: element.size_z,
 								z_level: level.z_level,
@@ -164,7 +169,7 @@ pub extern "C" fn bim_json_new_rust(path_to_file: *const c_char) -> *const bim_j
 										}
 									}).collect::<Vec<uuid_t_rust>>();
 
-									let ptr = outputs.as_mut_ptr();
+									let mut ptr = outputs.as_mut_ptr();
 									std::mem::forget(outputs);
 
 									ptr
@@ -179,7 +184,7 @@ pub extern "C" fn bim_json_new_rust(path_to_file: *const c_char) -> *const bim_j
 											}
 										}).collect::<Vec<point_t_rust>>();
 
-										let ptr = points.as_mut_ptr();
+										let mut ptr = points.as_mut_ptr();
 										std::mem::forget(points);
 
 										ptr
@@ -188,7 +193,7 @@ pub extern "C" fn bim_json_new_rust(path_to_file: *const c_char) -> *const bim_j
 							}
 						}).collect::<Vec<bim_json_element_t_rust>>();
 
-						let build_elements_ptr = build_elements.as_mut_ptr();
+						let mut build_elements_ptr = build_elements.as_mut_ptr();
 						std::mem::forget(build_elements);
 
 						build_elements_ptr
@@ -196,7 +201,7 @@ pub extern "C" fn bim_json_new_rust(path_to_file: *const c_char) -> *const bim_j
 				}
 			}).collect::<Vec<bim_json_level_t_rust>>();
 
-			let levels_ptr = levels.as_mut_ptr();
+			let mut levels_ptr = levels.as_mut_ptr();
 			std::mem::forget(levels);
 
 			levels_ptr
