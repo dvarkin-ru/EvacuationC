@@ -9,14 +9,14 @@ use json_object::parse_building_from_json;
 #[repr(C)]
 pub enum bim_element_sign_t_rust
 {
-	ROOM_RUST,         //< Указывает, что элемент здания является помещением/комнатой
-	STAIRCASE_RUST,    //< Указывает, что элемент здания является лестницей
-	DOOR_WAY_RUST,     //< Указывает, что элемент здания является проемом (без дверного полотна)
-	DOOR_WAY_INT_RUST, //< Указывает, что элемент здания является дверью, которая соединяет
+	ROOM,         //< Указывает, что элемент здания является помещением/комнатой
+	STAIRCASE,    //< Указывает, что элемент здания является лестницей
+	DOOR_WAY,     //< Указывает, что элемент здания является проемом (без дверного полотна)
+	DOOR_WAY_INT, //< Указывает, что элемент здания является дверью, которая соединяет
 					   // < два элемента: ROOM и ROOM или ROOM и STAIR
-	DOOR_WAY_OUT_RUST, //< Указывает, что элемент здания является эвакуационным выходом
-	OUTSIDE_RUST,      //< Указывает, что элемент является зоной вне здания
-	UNDEFINDED_RUST    //< Указывает, что тип элемента не определен
+	DOOR_WAY_OUT, //< Указывает, что элемент здания является эвакуационным выходом
+	OUTSIDE,      //< Указывает, что элемент является зоной вне здания
+	UNDEFINDED    //< Указывает, что тип элемента не определен
 }
 
 // Количество символов в UUID + NUL символ
@@ -44,7 +44,7 @@ pub struct polygon_t_rust
 pub struct bim_json_element_t_rust {
 	uuid: uuid_t_rust,            //< [JSON] UUID идентификатор элемента
 	name: *const c_char,          //< [JSON] Название элемента
-	polygon: polygon_t_rust,      //< [JSON] Полигон элемента
+	polygon: *mut polygon_t_rust,      //< [JSON] Полигон элемента
 	outputs: *mut uuid_t_rust,    //< [JSON] Массив UUID элементов, которые являются соседними к элементу
 	id: c_ulonglong,              //< Внутренний номер элемента (генерируется)
 	numofpeople: c_ulonglong,     //< [JSON] Количество людей в элементе
@@ -84,6 +84,8 @@ pub struct bim_json_object_t_rust {
 #[no_mangle]
 pub extern "C" fn bim_json_new_rust(path_to_file: *const c_char) -> *const bim_json_object_t_rust {
 	let building = unsafe { parse_building_from_json(CStr::from_ptr(path_to_file).to_str().unwrap()).expect("Ошибка при парсинге здания") };
+	let mut bim_element_rs_id: u64 = 0;
+	let mut bim_element_d_id: u64 = 0;
 
 	let bim_json_object = bim_json_object_t_rust {
 		address: Box::into_raw(Box::new(bim_json_address_t_rust {
@@ -113,17 +115,40 @@ pub extern "C" fn bim_json_new_rust(path_to_file: *const c_char) -> *const bim_j
 									}
 								},
 								name: CString::new(element.name.clone()).unwrap().into_raw(),
-								id: c_ulonglong::try_from(i).unwrap(),
+								id: match element.sign.as_str() { // TODO: сделать отсчёт id с нуля
+									"Room" => {
+										bim_element_rs_id += 1;
+										bim_element_rs_id
+									},
+									"Staircase" => {
+										bim_element_rs_id += 1;
+										bim_element_rs_id
+									},
+									"DoorWay" => {
+										bim_element_d_id += 1;
+										bim_element_d_id
+									},
+									"DoorWayInt" => {
+										bim_element_d_id += 1;
+										bim_element_d_id
+									},
+									"DoorWayOut" => {
+										bim_element_d_id += 1;
+										bim_element_d_id
+									}
+									_ => 0
+								},
 								size_z: element.size_z,
 								z_level: level.z_level,
 								numofpeople: element.number_of_people,
 								numofoutputs: c_ulonglong::try_from(element.outputs.len()).unwrap(),
 								sign: match element.sign.as_str() {
-									"Staircase" => bim_element_sign_t_rust::STAIRCASE_RUST,
-									"DoorWay" => bim_element_sign_t_rust::DOOR_WAY_RUST,
-									"DoorWayInt" => bim_element_sign_t_rust::DOOR_WAY_INT_RUST,
-									"DoorWayOut" => bim_element_sign_t_rust::DOOR_WAY_OUT_RUST,
-									_ => bim_element_sign_t_rust::UNDEFINDED_RUST
+									"Room" => bim_element_sign_t_rust::ROOM,
+									"Staircase" => bim_element_sign_t_rust::STAIRCASE,
+									"DoorWay" => bim_element_sign_t_rust::DOOR_WAY,
+									"DoorWayInt" => bim_element_sign_t_rust::DOOR_WAY_INT,
+									"DoorWayOut" => bim_element_sign_t_rust::DOOR_WAY_OUT,
+									_ => bim_element_sign_t_rust::UNDEFINDED
 								},
 								outputs: {
 									let mut outputs = element.outputs.iter().map(|output| {
@@ -144,7 +169,7 @@ pub extern "C" fn bim_json_new_rust(path_to_file: *const c_char) -> *const bim_j
 
 									ptr
 								},
-								polygon: polygon_t_rust {
+								polygon: Box::into_raw(Box::new(polygon_t_rust {
 									numofpoints: c_ulonglong::try_from(element.xy[0].points.len()).unwrap(),
 									points: {
 										let mut points = element.xy[0].points.iter().map(|point| {
@@ -159,7 +184,7 @@ pub extern "C" fn bim_json_new_rust(path_to_file: *const c_char) -> *const bim_j
 
 										ptr
 									}
-								}
+								}))
 							}
 						}).collect::<Vec<bim_json_element_t_rust>>();
 
@@ -177,6 +202,7 @@ pub extern "C" fn bim_json_new_rust(path_to_file: *const c_char) -> *const bim_j
 			levels_ptr
 		}
 	};
+
 
 	Box::into_raw(Box::new(bim_json_object))
 }

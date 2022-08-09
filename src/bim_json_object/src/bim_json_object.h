@@ -16,7 +16,7 @@ typedef enum bim_element_sign_t_rust {
 } bim_element_sign_t_rust;
 
 typedef struct uuid_t_rust {
-    const char x[36 + 1];
+    const char x[UUID_SIZE];
 } uuid_t_rust;
 
 typedef struct bim_json_address_t_rust {
@@ -38,7 +38,7 @@ typedef struct polygon_t_rust {
 typedef struct bim_json_element_t_rust {
   struct uuid_t_rust uuid;
   const char *name;
-  struct polygon_t_rust polygon;
+  struct polygon_t_rust *polygon;
   struct uuid_t_rust *outputs;
   unsigned long long id;
   unsigned long long numofpeople;
@@ -62,4 +62,4 @@ typedef struct bim_json_object_t_rust {
   unsigned long long numoflevels;
 } bim_json_object_t_rust;
 
-const struct bim_json_object_t_rust *bim_json_new_rust(const char *path_to_file);
+const struct bim_json_object_t *bim_json_new_rust(const char *path_to_file);
