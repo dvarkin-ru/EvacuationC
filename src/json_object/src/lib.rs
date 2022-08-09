@@ -41,7 +41,7 @@ pub struct BuildElement {
 	#[serde(rename="XY")]
 	pub xy: Vec<Coordinates>,
 	#[serde(rename="Output")]
-	pub output: Vec<String>,
+	pub outputs: Vec<String>,
 	#[serde(rename="NumPeople", default)]
 	pub number_of_people: u64
 }
