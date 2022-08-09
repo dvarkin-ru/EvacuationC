@@ -15,15 +15,15 @@ typedef enum bim_element_sign_t_rust {
   UNDEFINDED_RUST,
 } bim_element_sign_t_rust;
 
+typedef struct uuid_t_rust {
+    const char x[36 + 1];
+} uuid_t_rust;
+
 typedef struct bim_json_address_t_rust {
   const char *city;
   const char *street_address;
   const char *add_info;
 } bim_json_address_t_rust;
-
-typedef struct uuid_t_rust {
-  const char *x;
-} uuid_t_rust;
 
 typedef struct point_t_rust {
   double x;

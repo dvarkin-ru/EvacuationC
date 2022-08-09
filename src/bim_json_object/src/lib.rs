@@ -1,6 +1,7 @@
 #![allow(non_camel_case_types)]
 
 use std::fs;
+use std::convert::TryInto;
 use std::ffi::{CStr, CString};
 use libc::{c_char, c_ulonglong, c_double};
 use json_object::parse_building_from_json;
@@ -20,8 +21,8 @@ pub enum bim_element_sign_t_rust
 
 // Количество символов в UUID + NUL символ
 #[repr(C)]
-pub struct uuid_t_rust {
-	x: *const c_char // массив из char заменён на обычную строку
+struct uuid_t_rust {
+	x: [c_char; 36 + 1] // массив из char заменён на обычную строку
 }
 
 #[repr(C)]
@@ -102,7 +103,14 @@ pub extern "C" fn bim_json_new_rust(path_to_file: *const c_char) -> *const bim_j
 						let mut build_elements = level.build_elements.iter().enumerate().map(|(i, element)| {
 							bim_json_element_t_rust {
 								uuid: uuid_t_rust {
-									x: CString::new(element.id.clone()).unwrap().into_raw()
+									x: {
+										let mut char_vec = element.id.clone().chars().map(|c| match c.is_ascii() {
+											true => c as c_char,
+											false => panic!("uuid символ вне диапазона ASCII")
+										}).collect::<Vec<c_char>>();
+										char_vec.push(0 as c_char);
+										char_vec.try_into().unwrap_or_else(|v| panic!("Не удалось преобразовать uuid в массив char длиной 37: {:?}", v))
+									}
 								},
 								name: CString::new(element.name.clone()).unwrap().into_raw(),
 								id: c_ulonglong::try_from(i).unwrap(),
@@ -120,7 +128,14 @@ pub extern "C" fn bim_json_new_rust(path_to_file: *const c_char) -> *const bim_j
 								outputs: {
 									let mut outputs = element.outputs.iter().map(|output| {
 										uuid_t_rust {
-											x: CString::new(output.clone()).unwrap().into_raw()
+											x: {
+												let mut char_vec = output.clone().chars().map(|c| match c.is_ascii() {
+													true => c as c_char,
+													false => panic!("uuid символ вне диапазона ASCII: {}", c)
+												}).collect::<Vec<c_char>>();
+												char_vec.push(0 as c_char);
+												char_vec.try_into().unwrap_or_else(|v| panic!("Не удалось преобразовать uuid в массив char длиной 37: {:?}", v))
+											}
 										}
 									}).collect::<Vec<uuid_t_rust>>();
 
