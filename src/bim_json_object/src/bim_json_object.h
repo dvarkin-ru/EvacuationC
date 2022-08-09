@@ -50,7 +50,7 @@ typedef struct bim_json_element_t_rust {
 
 typedef struct bim_json_level_t_rust {
   const char *name;
-  const struct bim_json_element_t_rust *elements;
+  struct bim_json_element_t_rust *elements;
   double z_level;
   unsigned long long numofelements;
 } bim_json_level_t_rust;
