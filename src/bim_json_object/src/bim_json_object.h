@@ -25,9 +25,20 @@ typedef struct uuid_t_rust {
   const char *x;
 } uuid_t_rust;
 
+typedef struct point_t_rust {
+  double x;
+  double y;
+} point_t_rust;
+
+typedef struct polygon_t_rust {
+  unsigned long long numofpoints;
+  struct point_t_rust *points;
+} polygon_t_rust;
+
 typedef struct bim_json_element_t_rust {
   struct uuid_t_rust uuid;
   const char *name;
+  struct polygon_t_rust polygon;
   struct uuid_t_rust *outputs;
   unsigned long long id;
   unsigned long long numofpeople;

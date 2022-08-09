@@ -24,12 +24,26 @@ pub struct uuid_t_rust {
 	x: *const c_char // массив из char заменён на обычную строку
 }
 
+#[repr(C)]
+pub struct point_t_rust
+{
+	x: c_double,
+	y: c_double
+}
+
+#[repr(C)]
+pub struct polygon_t_rust
+{
+	numofpoints: c_ulonglong,
+	points: *mut point_t_rust
+}
+
 // Структура, описывающая элемент
 #[repr(C)]
 pub struct bim_json_element_t_rust {
 	uuid: uuid_t_rust,            //< [JSON] UUID идентификатор элемента
 	name: *const c_char,        //< [JSON] Название элемента
-	// polygon: polygon_t,      //< [JSON] Полигон элемента
+	polygon: polygon_t_rust,      //< [JSON] Полигон элемента
 	outputs: *mut uuid_t_rust,         //< [JSON] Массив UUID элементов, которые являются соседними к элементу
 	id: c_ulonglong,                 //< Внутренний номер элемента (генерируется)
 	numofpeople: c_ulonglong,        //< [JSON] Количество людей в элементе
@@ -105,6 +119,22 @@ pub extern "C" fn bim_json_new_rust(path_to_file: *const c_char) -> *const bim_j
 							std::mem::forget(outputs);
 
 							ptr
+						},
+						polygon: polygon_t_rust {
+							numofpoints: c_ulonglong::try_from(element.xy[0].points.len()).unwrap(),
+							points: {
+								let mut points = element.xy[0].points.iter().map(|point| {
+									point_t_rust {
+										x: point.x,
+										y: point.y
+									}
+								}).collect::<Vec<point_t_rust>>();
+
+								let ptr = points.as_mut_ptr();
+								std::mem::forget(points);
+
+								ptr
+							}
 						}
 					}
 				}).collect::<Vec<bim_json_element_t_rust>>();
