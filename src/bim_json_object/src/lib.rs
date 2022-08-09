@@ -30,7 +30,7 @@ pub struct bim_json_element_t_rust {
 	uuid: uuid_t_rust,            //< [JSON] UUID идентификатор элемента
 	name: *const c_char,        //< [JSON] Название элемента
 	// polygon: polygon_t,      //< [JSON] Полигон элемента
-	// outputs: uuid_t,         //< [JSON] Массив UUID элементов, которые являются соседними
+	outputs: *mut uuid_t_rust,         //< [JSON] Массив UUID элементов, которые являются соседними к элементу
 	id: c_ulonglong,                 //< Внутренний номер элемента (генерируется)
 	numofpeople: c_ulonglong,        //< [JSON] Количество людей в элементе
 	numofoutputs: c_ulonglong,       //< Количество связанных с текущим элементов
@@ -93,6 +93,18 @@ pub extern "C" fn bim_json_new_rust(path_to_file: *const c_char) -> *const bim_j
 							"DoorWayInt" => bim_element_sign_t_rust::DOOR_WAY_INT_RUST,
 							"DoorWayOut" => bim_element_sign_t_rust::DOOR_WAY_OUT_RUST,
 							_ => bim_element_sign_t_rust::UNDEFINDED_RUST
+						},
+						outputs: {
+							let mut outputs = element.outputs.iter().map(|output| {
+								uuid_t_rust {
+									x: CString::new(output.clone()).unwrap().into_raw()
+								}
+							}).collect::<Vec<uuid_t_rust>>();
+
+							let ptr = outputs.as_mut_ptr();
+							std::mem::forget(outputs);
+
+							ptr
 						}
 					}
 				}).collect::<Vec<bim_json_element_t_rust>>();

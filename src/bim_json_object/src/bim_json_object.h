@@ -28,6 +28,7 @@ typedef struct uuid_t_rust {
 typedef struct bim_json_element_t_rust {
   struct uuid_t_rust uuid;
   const char *name;
+  struct uuid_t_rust *outputs;
   unsigned long long id;
   unsigned long long numofpeople;
   unsigned long long numofoutputs;
