@@ -56,7 +56,6 @@ target_link_libraries(${PROJECT_NAME}
         arraylist
         json-c
         m
-    "-static"
     )
 
 
