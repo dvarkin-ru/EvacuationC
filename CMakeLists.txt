@@ -9,7 +9,7 @@ set(CMAKE_VERBOSE_MAKEFILE TRUE)
 if(MSVC)
     set(CMAKE_C_FLAGS "/Wall")
 else()
-    set(CMAKE_C_FLAGS "-std=gnu18 -Wall -D_GNU_SOURCE -Wparentheses -Wshadow -funsigned-char")
+    set(CMAKE_C_FLAGS "-std=gnu11 -Wall -D_GNU_SOURCE -Wparentheses -Wshadow -funsigned-char")
 endif()
 set(CMAKE_C_FLAGS_DEBUG     "-g -O0")
 #set(CMAKE_C_FLAGS_DEBUG     "${CMAKE_C_FLAGS_DEBUG} -fsanitize=address -fsanitize=pointer-subtract -fsanitize=shift")
@@ -30,10 +30,11 @@ add_executable(${PROJECT_NAME}
     src/bim_evac.c          src/bim_evac.h
     src/bim_polygon_tools.c src/bim_polygon_tools.h
     src/bim_configure.c     src/bim_configure.h
-    src/bim_json_object.c   src/bim_json_object.h
-                            src/bim_uuid.h
-                            src/bim_cli/bim_cli.h
     src/bim_output.c        src/bim_output.h
+                            src/bim_json_object.h
+                            src/bim_json_object/src/bim_json_object_rust.h
+                            src/bim_uuid.h
+                            src/bim_cli/src/bim_cli.h
     src/main.c
     )
 

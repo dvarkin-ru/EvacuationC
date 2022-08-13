@@ -82,12 +82,12 @@ pub struct bim_json_object_t_rust {
 
 #[allow(clippy::not_unsafe_ptr_arg_deref)]
 #[no_mangle]
-pub extern "C" fn bim_json_new_rust(path_to_file: *const c_char) -> *const bim_json_object_t_rust {
+pub extern "C" fn bim_json_new(path_to_file: *const c_char) -> *const bim_json_object_t_rust {
 	let building = unsafe { parse_building_from_json(CStr::from_ptr(path_to_file).to_str().unwrap()).expect("Ошибка при парсинге здания") };
 	let mut bim_element_rs_id: u64 = 0;
 	let mut bim_element_d_id: u64 = 0;
 
-	let mut bim_json_object = bim_json_object_t_rust {
+	let bim_json_object = bim_json_object_t_rust {
 		address: Box::into_raw(Box::new(bim_json_address_t_rust {
 			city: CString::new(building.address.city).unwrap().into_raw(),
 			street_address: CString::new(building.address.street_address).unwrap().into_raw(),
@@ -102,7 +102,7 @@ pub extern "C" fn bim_json_new_rust(path_to_file: *const c_char) -> *const bim_j
 					numofelements: c_ulonglong::try_from(level.build_elements.len()).unwrap(),
 					z_level: level.z_level,
 					elements: {
-						let mut build_elements = level.build_elements.iter().enumerate().map(|(i, element)| {
+						let mut build_elements = level.build_elements.iter().map(|element| {
 							bim_json_element_t_rust {
 								uuid: uuid_t_rust {
 									x: {
@@ -115,7 +115,7 @@ pub extern "C" fn bim_json_new_rust(path_to_file: *const c_char) -> *const bim_j
 									}
 								},
 								name: CString::new(element.name.clone()).unwrap().into_raw(),
-								id: match element.sign.as_str() { // TODO: сделать отсчёт id с нуля
+								id: match element.sign.as_str() {
 									"Room" => {
 										let id = bim_element_rs_id;
 										bim_element_rs_id += 1;
@@ -169,7 +169,7 @@ pub extern "C" fn bim_json_new_rust(path_to_file: *const c_char) -> *const bim_j
 										}
 									}).collect::<Vec<uuid_t_rust>>();
 
-									let mut ptr = outputs.as_mut_ptr();
+									let ptr = outputs.as_mut_ptr();
 									std::mem::forget(outputs);
 
 									ptr
@@ -184,7 +184,7 @@ pub extern "C" fn bim_json_new_rust(path_to_file: *const c_char) -> *const bim_j
 											}
 										}).collect::<Vec<point_t_rust>>();
 
-										let mut ptr = points.as_mut_ptr();
+										let ptr = points.as_mut_ptr();
 										std::mem::forget(points);
 
 										ptr
@@ -193,7 +193,7 @@ pub extern "C" fn bim_json_new_rust(path_to_file: *const c_char) -> *const bim_j
 							}
 						}).collect::<Vec<bim_json_element_t_rust>>();
 
-						let mut build_elements_ptr = build_elements.as_mut_ptr();
+						let build_elements_ptr = build_elements.as_mut_ptr();
 						std::mem::forget(build_elements);
 
 						build_elements_ptr
@@ -201,7 +201,7 @@ pub extern "C" fn bim_json_new_rust(path_to_file: *const c_char) -> *const bim_j
 				}
 			}).collect::<Vec<bim_json_level_t_rust>>();
 
-			let mut levels_ptr = levels.as_mut_ptr();
+			let levels_ptr = levels.as_mut_ptr();
 			std::mem::forget(levels);
 
 			levels_ptr
