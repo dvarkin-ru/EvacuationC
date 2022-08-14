@@ -10,10 +10,10 @@ if(MSVC)
     set(CMAKE_C_FLAGS "/Wall")
 else()
     set(CMAKE_C_FLAGS "-std=gnu11 -Wall -D_GNU_SOURCE -Wparentheses -Wshadow -funsigned-char")
+    set(CMAKE_C_FLAGS_DEBUG     "-g -O0")
+    #set(CMAKE_C_FLAGS_DEBUG     "${CMAKE_C_FLAGS_DEBUG} -fsanitize=address -fsanitize=pointer-subtract -fsanitize=shift")
+    set(CMAKE_C_FLAGS_RELEASE   "-O3 -DNDEBUG")
 endif()
-set(CMAKE_C_FLAGS_DEBUG     "-g -O0")
-#set(CMAKE_C_FLAGS_DEBUG     "${CMAKE_C_FLAGS_DEBUG} -fsanitize=address -fsanitize=pointer-subtract -fsanitize=shift")
-set(CMAKE_C_FLAGS_RELEASE   "-O3 -DNDEBUG")
 
 if (NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Release)
@@ -53,10 +53,9 @@ target_link_libraries(${PROJECT_NAME}
     PRIVATE
         logger_static
         triangle
-        pthread
         arraylist
         json-c
-        m
+#        m
     )
 
 

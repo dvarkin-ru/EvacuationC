@@ -55,7 +55,7 @@ char* bim_basename    (char *path_to_file)
 
 char *bim_create_file_name  (const char* bfn, const char* middle_name, const char* suffix)
 {
-    char *fn = (char*)calloc((strlen(bfn) + strlen(middle_name) + strlen(suffix)), sizeof (char));
+    char *fn = (char*)calloc((strlen(bfn) + strlen(middle_name) + strlen(suffix) + 1), sizeof (char)); // длина + 1 для нулевого символа
     if (!fn)
     {
         return NULL;
