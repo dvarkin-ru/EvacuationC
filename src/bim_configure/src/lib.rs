@@ -71,7 +71,7 @@ pub struct bim_cfg_scenario_t_rust
 	pub num_of_bim_jsons: c_uchar,
 	pub distribution: bim_cfg_distribution_t_rust,
 	pub transits: bim_cfg_transitions_width_t_rust,
-	// pub modeling: bim_cfg_modeling_t
+	pub modeling: bim_cfg_modeling_t_rust
 }
 
 #[allow(clippy::not_unsafe_ptr_arg_deref)]
@@ -198,6 +198,12 @@ pub extern "C" fn bim_cfg_load_rust(path_to_file: *const c_char) -> *const bim_c
 
 				ptr
 			}
+		},
+		modeling: bim_cfg_modeling_t_rust {
+			step: config.modeling.step as f32,
+			speed_max: config.modeling.max_speed as f32,
+			density_min: config.modeling.min_density as f32,
+			density_max: config.modeling.max_density as f32
 		}
 	};
 

@@ -15,8 +15,7 @@ typedef enum transits_width_type_rust {
   transits_width_users_rust,
 } transits_width_type_rust;
 
-typedef struct uuid_t_rust
-{
+typedef struct uuid_t_rust {
     const char x[UUID_SIZE];
 } uuid_t_rust;
 
@@ -45,12 +44,20 @@ typedef struct bim_cfg_transitions_width_t_rust {
   unsigned char num_of_special_blocks;
 } bim_cfg_transitions_width_t_rust;
 
+typedef struct bim_cfg_modeling_t_rust {
+  float step;
+  float speed_max;
+  float density_min;
+  float density_max;
+} bim_cfg_modeling_t_rust;
+
 typedef struct bim_cfg_scenario_t_rust {
   struct bim_cfg_file_name_t_rust *bim_jsons;
   struct bim_cfg_file_name_t_rust logger_configure;
   unsigned char num_of_bim_jsons;
   struct bim_cfg_distribution_t_rust distribution;
   struct bim_cfg_transitions_width_t_rust transits;
+  struct bim_cfg_modeling_t_rust modeling;
 } bim_cfg_scenario_t_rust;
 
 const struct bim_cfg_scenario_t_rust *bim_cfg_load_rust(const char *path_to_file);

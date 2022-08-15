@@ -31,6 +31,7 @@ add_executable(${PROJECT_NAME}
     src/bim_evac.c          src/bim_evac.h
     src/bim_polygon_tools.c src/bim_polygon_tools.h
     src/bim_configure.c     src/bim_configure.h
+                            src/bim_configure/src/bim_configure_rust.h
     src/bim_output.c        src/bim_output.h
                             src/bim_json_object.h
                             src/bim_json_object/src/bim_json_object_rust.h
