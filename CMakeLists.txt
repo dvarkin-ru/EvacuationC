@@ -44,7 +44,6 @@ target_include_directories(${PROJECT_NAME}
     PUBLIC
         ./thirdparty/triangle
         ./thirdparty/arraylist
-        ./thirdparty/json-c
         ./thirdparty/c-logger
     )
 
@@ -57,8 +56,6 @@ target_link_libraries(${PROJECT_NAME}
         logger_static
         triangle
         arraylist
-        json-c
-#        m
     )
 
 
@@ -66,11 +63,9 @@ add_subdirectory(thirdparty/triangle)
 add_subdirectory(thirdparty/arraylist)
 add_subdirectory(thirdparty/c-logger)
 
-# json-c config
 set(CMAKE_POLICY_DEFAULT_CMP0077 NEW)
 #set(BUILD_STATIC_LIBS ON)
 set(BUILD_SHARED_LIBS OFF)
-add_subdirectory(thirdparty/json-c)
 
 ### Test
 if(build_tests)

@@ -16,9 +16,9 @@
 #ifndef BIMCONF_H
 #define BIMCONF_H
 
+#include <stdlib.h>
 #include <stdint.h>
 #include <string.h>
-#include "../json-c/json.h"        ///< https://github.com/rbtylee/tutorial-jsonc/blob/master/tutorial/index.md
 #include "bim_uuid.h"
 
 #define UUID_SIZE 36 + 1

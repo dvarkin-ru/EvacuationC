@@ -4,22 +4,22 @@ use std::ffi::{CStr};
 use libc::{c_char, c_uchar, c_float};
 use configuration::{load_cfg, DistributionType, TransitionType};
 
-// Количество символов в UUID + NUL символ
-#[repr(C)]
-pub struct uuid_t_rust {
-	pub x: [c_char; 36 + 1] // массив из char заменён на обычную строку
-}
-
 #[repr(C)]
 pub enum distribution_type_rust {
-	distribution_from_bim_rust,
-	distribution_uniform_rust
+	distribution_from_bim,
+	distribution_uniform
 }
 
 #[repr(C)]
 pub enum transits_width_type_rust {
-	transits_width_from_bim_rust,
-	transits_width_users_rust
+	transits_width_from_bim,
+	transits_width_users
+}
+
+// Количество символов в UUID + NUL символ
+#[repr(C)]
+pub struct uuid_t_rust {
+	pub x: [c_char; 36 + 1] // массив из char заменён на обычную строку
 }
 
 #[repr(C)]
@@ -117,8 +117,8 @@ pub extern "C" fn bim_cfg_load(path_to_file: *const c_char) -> *const bim_cfg_sc
 		},
 		distribution: bim_cfg_distribution_t_rust {
 			r#type:  match config.distribution.distribution_type {
-				DistributionType::FromBim => distribution_type_rust::distribution_from_bim_rust,
-				DistributionType::Uniform => distribution_type_rust::distribution_uniform_rust
+				DistributionType::FromBim => distribution_type_rust::distribution_from_bim,
+				DistributionType::Uniform => distribution_type_rust::distribution_uniform
 			},
 			density: config.distribution.density as f32,
 			num_of_special_blocks: c_uchar::try_from(config.distribution.special.len())
@@ -158,8 +158,8 @@ pub extern "C" fn bim_cfg_load(path_to_file: *const c_char) -> *const bim_cfg_sc
 		},
 		transits: bim_cfg_transitions_width_t_rust {
 			r#type: match config.transition.transitions_type {
-				TransitionType::FromBim => transits_width_type_rust::transits_width_from_bim_rust,
-				TransitionType::Users => transits_width_type_rust::transits_width_users_rust
+				TransitionType::FromBim => transits_width_type_rust::transits_width_from_bim,
+				TransitionType::Users => transits_width_type_rust::transits_width_users
 			},
 			doorwayin: config.transition.doorway_in as f32,
 			doorwayout: config.transition.doorway_out as f32,
