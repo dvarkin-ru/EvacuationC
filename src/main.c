@@ -41,9 +41,6 @@ int main ()
     const cli_params_t       *cli_params       = read_cl_args();
     const bim_cfg_scenario_t *bim_cfg_scenario = bim_cfg_load(cli_params->scenario_file);
 
-    // test
-    const bim_cfg_scenario_t_rust *bim_cfg_scenario_rust = bim_cfg_load_rust(cli_params->scenario_file);
-
     // Настройки с-logger
     logger_configure(bim_cfg_scenario->logger_configure.x);
 

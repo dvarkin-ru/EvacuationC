@@ -76,7 +76,7 @@ pub struct bim_cfg_scenario_t_rust
 
 #[allow(clippy::not_unsafe_ptr_arg_deref)]
 #[no_mangle]
-pub extern "C" fn bim_cfg_load_rust(path_to_file: *const c_char) -> *const bim_cfg_scenario_t_rust {
+pub extern "C" fn bim_cfg_load(path_to_file: *const c_char) -> *const bim_cfg_scenario_t_rust {
 	let config = unsafe { load_cfg(CStr::from_ptr(path_to_file).to_str().unwrap())
 		.expect("Ошибка парсинга конфигурации сценария") };
 	let scenario_config = bim_cfg_scenario_t_rust {

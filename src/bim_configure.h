@@ -83,7 +83,6 @@ typedef struct
 } bim_cfg_scenario_t;
 
 
-const bim_cfg_scenario_t*   bim_cfg_load    (const char *filename);
 void                        bim_cfg_unload  (bim_cfg_scenario_t* bim_cfg_scenario);
 
 #endif /* BIMCONF_H */
