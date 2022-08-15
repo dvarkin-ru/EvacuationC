@@ -75,11 +75,12 @@ pub struct ScenarioCfg {
 	pub modeling: Modeling
 }
 
-pub fn load_cfg (path_to_file: &String) -> Result<ScenarioCfg, Box<dyn Error>> {
+pub fn load_cfg (path_to_file: &str) -> Result<ScenarioCfg, Box<dyn Error>> {
 	let json_content = fs::read_to_string(path_to_file).unwrap_or_else(|err| {
 		eprintln!("Ошибка чтения файла конфигурации сценария {}: {}", path_to_file, err);
 		process::exit(1);
 	});
+
 	let cfg: ScenarioCfg = serde_json::from_str(&json_content).unwrap_or_else(|err| {
 		eprintln!("Ошибка десериализации файла конфигурации сценария {}: {}", path_to_file, err);
 		process::exit(1);
