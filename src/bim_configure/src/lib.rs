@@ -68,7 +68,7 @@ pub struct bim_cfg_scenario_t_rust
 {
 	pub bim_jsons: *mut bim_cfg_file_name_t_rust,
 	pub logger_configure: bim_cfg_file_name_t_rust,
-	// pub num_of_bim_jsons: c_uchar,
+	pub num_of_bim_jsons: c_uchar,
 	// pub distribution: bim_cfg_distribution_t,
 	// pub transits: bim_cfg_transitions_width_t,
 	// pub modeling: bim_cfg_modeling_t
@@ -101,6 +101,7 @@ pub extern "C" fn bim_cfg_load_rust(path_to_file: *const c_char) -> *const bim_c
 			std::mem::forget(files);
 			ptr
 		},
+		num_of_bim_jsons: c_uchar::try_from(config.files.len()).expect("Количество файлов в конфигурации больше 255"),
 		logger_configure: bim_cfg_file_name_t_rust {
 			x: {
 				let mut char_arr: [c_char; 256] = [0; 256];
