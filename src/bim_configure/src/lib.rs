@@ -1,6 +1,5 @@
 #![allow(non_camel_case_types)]
 
-use std::convert::TryInto;
 use std::ffi::{CStr};
 use libc::{c_char, c_uchar, c_float};
 use configuration::load_cfg;
@@ -68,7 +67,7 @@ pub struct bim_cfg_file_name_t_rust
 pub struct bim_cfg_scenario_t_rust
 {
 	pub bim_jsons: *mut bim_cfg_file_name_t_rust,
-	// pub logger_configure: bim_cfg_file_name_t,
+	pub logger_configure: bim_cfg_file_name_t_rust,
 	// pub num_of_bim_jsons: c_uchar,
 	// pub distribution: bim_cfg_distribution_t,
 	// pub transits: bim_cfg_transitions_width_t,
@@ -86,7 +85,7 @@ pub extern "C" fn bim_cfg_load_rust(path_to_file: *const c_char) -> *const bim_c
 				bim_cfg_file_name_t_rust {
 					x: {
 						let mut char_arr: [c_char; 256] = [0; 256];
-						for (i, c) in filename.clone().chars().enumerate() {
+						for (i, c) in filename.chars().enumerate() {
 							match c.is_ascii() {
 								true => char_arr[i] = c as c_char,
 								false => panic!("uuid символ вне диапазона ASCII")
@@ -101,6 +100,19 @@ pub extern "C" fn bim_cfg_load_rust(path_to_file: *const c_char) -> *const bim_c
 			let ptr = files.as_mut_ptr();
 			std::mem::forget(files);
 			ptr
+		},
+		logger_configure: bim_cfg_file_name_t_rust {
+			x: {
+				let mut char_arr: [c_char; 256] = [0; 256];
+				for (i, c) in config.loggerConfig.chars().enumerate() {
+					match c.is_ascii() {
+						true => char_arr[i] = c as c_char,
+						false => panic!("uuid символ вне диапазона ASCII")
+					}
+				}
+
+				char_arr
+			}
 		}
 	};
 
