@@ -2,7 +2,7 @@
 
 use std::ffi::{CStr};
 use libc::{c_char, c_uchar, c_float};
-use configuration::load_cfg;
+use configuration::{load_cfg, DistributionType};
 
 // Количество символов в UUID + NUL символ
 #[repr(C)]
@@ -12,8 +12,8 @@ pub struct uuid_t_rust {
 
 #[repr(C)]
 pub enum distribution_type_rust {
-	distribution_from_bim,
-	distribution_uniform
+	distribution_from_bim_rust,
+	distribution_uniform_rust
 }
 
 #[repr(C)]
@@ -25,7 +25,7 @@ pub enum transits_width_type_rust {
 #[repr(C)]
 pub struct special_t_rust
 {
-	pub uuid: uuid_t_rust,
+	pub uuid: *mut uuid_t_rust,
 	pub num_of_uuids: c_uchar,
 	pub value: c_float
 }
@@ -69,7 +69,7 @@ pub struct bim_cfg_scenario_t_rust
 	pub bim_jsons: *mut bim_cfg_file_name_t_rust,
 	pub logger_configure: bim_cfg_file_name_t_rust,
 	pub num_of_bim_jsons: c_uchar,
-	// pub distribution: bim_cfg_distribution_t,
+	pub distribution: bim_cfg_distribution_t_rust,
 	// pub transits: bim_cfg_transitions_width_t,
 	// pub modeling: bim_cfg_modeling_t
 }
@@ -88,7 +88,7 @@ pub extern "C" fn bim_cfg_load_rust(path_to_file: *const c_char) -> *const bim_c
 						for (i, c) in filename.chars().enumerate() {
 							match c.is_ascii() {
 								true => char_arr[i] = c as c_char,
-								false => panic!("uuid символ вне диапазона ASCII")
+								false => panic!("символ вне диапазона ASCII")
 							}
 						}
 
@@ -108,11 +108,52 @@ pub extern "C" fn bim_cfg_load_rust(path_to_file: *const c_char) -> *const bim_c
 				for (i, c) in config.loggerConfig.chars().enumerate() {
 					match c.is_ascii() {
 						true => char_arr[i] = c as c_char,
-						false => panic!("uuid символ вне диапазона ASCII")
+						false => panic!("символ вне диапазона ASCII")
 					}
 				}
 
 				char_arr
+			}
+		},
+		distribution: bim_cfg_distribution_t_rust {
+			r#type:  match config.distribution.distribution_type {
+				DistributionType::FromBim => distribution_type_rust::distribution_from_bim_rust,
+				DistributionType::Uniform => distribution_type_rust::distribution_uniform_rust
+			},
+			density: config.distribution.density as f32,
+			num_of_special_blocks: c_uchar::try_from(config.distribution.special.len())
+				.expect("Не удалось преобразовать num_of_special_blocks"),
+			special: {
+				let mut special_blocks = config.distribution.special.iter().map(|special_block| {
+					special_t_rust {
+						uuid: {
+							let mut uuid_vec = special_block.uuid.iter().map(|uuid_value| {
+								uuid_t_rust {
+									x: {
+										let mut char_vec = uuid_value.clone().chars().map(|c| match c.is_ascii() {
+											true => c as c_char,
+											false => panic!("uuid символ вне диапазона ASCII: {}", c)
+										}).collect::<Vec<c_char>>();
+										char_vec.push(0 as c_char);
+										char_vec.try_into()
+											.unwrap_or_else(|v| panic!("Не удалось преобразовать uuid в массив char длиной 37: {:?}", v))
+									}
+								}
+							}).collect::<Vec<uuid_t_rust>>();
+
+							let ptr = uuid_vec.as_mut_ptr();
+							std::mem::forget(uuid_vec);
+
+							ptr
+						},
+						num_of_uuids: c_uchar::try_from(special_block.uuid.len()).expect("Не удалось преобразовать num_of_uuids"),
+						value: special_block.density as f32
+					}
+				}).collect::<Vec<special_t_rust>>();
+
+				let ptr = special_blocks.as_mut_ptr();
+				std::mem::forget(special_blocks);
+				ptr
 			}
 		}
 	};
