@@ -2,7 +2,7 @@
 
 use std::ffi::{CStr};
 use libc::{c_char, c_uchar, c_float};
-use configuration::{load_cfg, DistributionType};
+use configuration::{load_cfg, DistributionType, TransitionType};
 
 // Количество символов в UUID + NUL символ
 #[repr(C)]
@@ -18,8 +18,8 @@ pub enum distribution_type_rust {
 
 #[repr(C)]
 pub enum transits_width_type_rust {
-	transits_width_from_bim,
-	transits_width_users
+	transits_width_from_bim_rust,
+	transits_width_users_rust
 }
 
 #[repr(C)]
@@ -70,7 +70,7 @@ pub struct bim_cfg_scenario_t_rust
 	pub logger_configure: bim_cfg_file_name_t_rust,
 	pub num_of_bim_jsons: c_uchar,
 	pub distribution: bim_cfg_distribution_t_rust,
-	// pub transits: bim_cfg_transitions_width_t,
+	pub transits: bim_cfg_transitions_width_t_rust,
 	// pub modeling: bim_cfg_modeling_t
 }
 
@@ -122,7 +122,7 @@ pub extern "C" fn bim_cfg_load_rust(path_to_file: *const c_char) -> *const bim_c
 			},
 			density: config.distribution.density as f32,
 			num_of_special_blocks: c_uchar::try_from(config.distribution.special.len())
-				.expect("Не удалось преобразовать num_of_special_blocks"),
+				.expect("Не удалось преобразовать num_of_special_blocks в distribution"),
 			special: {
 				let mut special_blocks = config.distribution.special.iter().map(|special_block| {
 					special_t_rust {
@@ -146,13 +146,56 @@ pub extern "C" fn bim_cfg_load_rust(path_to_file: *const c_char) -> *const bim_c
 
 							ptr
 						},
-						num_of_uuids: c_uchar::try_from(special_block.uuid.len()).expect("Не удалось преобразовать num_of_uuids"),
+						num_of_uuids: c_uchar::try_from(special_block.uuid.len()).expect("Не удалось преобразовать num_of_uuids в distribution"),
 						value: special_block.density as f32
 					}
 				}).collect::<Vec<special_t_rust>>();
 
 				let ptr = special_blocks.as_mut_ptr();
 				std::mem::forget(special_blocks);
+				ptr
+			}
+		},
+		transits: bim_cfg_transitions_width_t_rust {
+			r#type: match config.transition.transitions_type {
+				TransitionType::FromBim => transits_width_type_rust::transits_width_from_bim_rust,
+				TransitionType::Users => transits_width_type_rust::transits_width_users_rust
+			},
+			doorwayin: config.transition.doorway_in as f32,
+			doorwayout: config.transition.doorway_out as f32,
+			num_of_special_blocks: c_uchar::try_from(config.transition.special.len())
+				.expect("Не удалось преобразовать num_of_special_blocks в transitions"),
+			special: {
+				let mut special_blocks = config.transition.special.iter().map(|special_block| {
+					special_t_rust {
+						uuid: {
+							let mut uuid_vec = special_block.uuid.iter().map(|uuid_value| {
+								uuid_t_rust {
+									x: {
+										let mut char_vec = uuid_value.clone().chars().map(|c| match c.is_ascii() {
+											true => c as c_char,
+											false => panic!("uuid символ вне диапазона ASCII: {}", c)
+										}).collect::<Vec<c_char>>();
+										char_vec.push(0 as c_char);
+										char_vec.try_into()
+											.unwrap_or_else(|v| panic!("Не удалось преобразовать uuid в массив char длиной 37: {:?}", v))
+									}
+								}
+							}).collect::<Vec<uuid_t_rust>>();
+
+							let ptr = uuid_vec.as_mut_ptr();
+							std::mem::forget(uuid_vec);
+
+							ptr
+						},
+						num_of_uuids: c_uchar::try_from(special_block.uuid.len()).expect("Не удалось преобразовать num_of_uuids в transits"),
+						value: special_block.width as f32
+					}
+				}).collect::<Vec<special_t_rust>>();
+
+				let ptr = special_blocks.as_mut_ptr();
+				std::mem::forget(special_blocks);
+
 				ptr
 			}
 		}
