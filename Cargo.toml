@@ -1,0 +1,13 @@
+[package]
+name = "evacuation"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+cli = { path = "src/cli" }
+configuration = { path = "src/configuration" }
+json_object = { path = "src/json_object" }
+polygon_tools = { path = "src/polygon_tools" }
+graph = { path = "src/graph" }

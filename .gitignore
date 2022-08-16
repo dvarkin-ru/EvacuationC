@@ -5,6 +5,8 @@
 
 !.editorconfig
 
+!Cargo.toml
+
 !evacuationc.conf
 !LICENSE
 !logger.conf
@@ -15,7 +17,7 @@
 !CMakeLists.txt
 
 !src/
-!src/*
+!src/**/*
 
 !res/
 !res/*.json

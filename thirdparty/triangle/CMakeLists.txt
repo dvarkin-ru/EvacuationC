@@ -8,7 +8,7 @@ add_library(triangle
 )
 
 if(MSVC)
-    target_compile_options(triangle PRIVATE /Wall)
+    target_compile_options(triangle PRIVATE "/Wall")
 else()
     target_compile_options(triangle
         PRIVATE
