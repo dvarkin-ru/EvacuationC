@@ -6,6 +6,8 @@
 !.editorconfig
 
 !Cargo.toml
+!Cargo.lock
+!build.rs
 
 !evacuationc.conf
 !LICENSE

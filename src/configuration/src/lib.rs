@@ -70,7 +70,7 @@ pub struct ScenarioCfg {
 	#[serde(rename="bim")]
 	pub files: Vec<String>,
 	#[serde(rename="logger_configure")]
-	pub loggerConfig: String,
+	pub logger_config: String,
 	pub distribution: Distribution,
 	#[serde(rename="transits")]
 	pub transition: Transition,

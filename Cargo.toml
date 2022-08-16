@@ -9,8 +9,9 @@ edition = "2021"
 cli = { path = "src/cli" }
 configuration = { path = "src/configuration" }
 json_object = { path = "src/json_object" }
-polygon_tools = { path = "src/polygon_tools" }
-graph = { path = "src/graph" }
+bim_cli = { path = "src/bim_cli" }
+bim_configure = { path = "src/bim_configure" }
+bim_json_object = { path = "src/bim_json_object" }
 
 [build-dependencies]
 cc = { version = "1.0", features = ["parallel"] }

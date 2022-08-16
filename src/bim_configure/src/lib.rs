@@ -105,7 +105,7 @@ pub extern "C" fn bim_cfg_load(path_to_file: *const c_char) -> *const bim_cfg_sc
 		logger_configure: bim_cfg_file_name_t_rust {
 			x: {
 				let mut char_arr: [c_char; 256] = [0; 256];
-				for (i, c) in config.loggerConfig.chars().enumerate() {
+				for (i, c) in config.logger_config.chars().enumerate() {
 					match c.is_ascii() {
 						true => char_arr[i] = c as c_char,
 						false => panic!("символ вне диапазона ASCII")
