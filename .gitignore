@@ -21,6 +21,9 @@
 !src/
 !src/**/*
 
+!src-tauri/
+!src-tauri/**/*
+
 !res/
 !res/*.json
 
