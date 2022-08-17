@@ -24,6 +24,12 @@
 !src-tauri/
 !src-tauri/**/*
 
+!package.json
+
+!index.html
+!index.css
+!main.js
+
 !res/
 !res/*.json
 

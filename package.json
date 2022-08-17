@@ -1,0 +1,17 @@
+{
+  "name": "evacuation",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "**EvacuationC** -- программа моделирования движения людей в здании.",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preveiw": "vite preview",
+    "tauri": "tauri"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "^1.0.5",
+    "vite": "^3.0.8"
+  }
+}
