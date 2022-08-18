@@ -27,8 +27,8 @@
 !package.json
 
 !index.html
-!index.css
-!main.js
+!src-ui/
+!src-ui/**/*
 
 !res/
 !res/*.json
