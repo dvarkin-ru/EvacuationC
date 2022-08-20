@@ -1,3 +1,7 @@
+use iui::{
+	UI,
+	controls
+};
 use cli;
 use configuration;
 use json_object;
@@ -10,5 +14,17 @@ extern "C" {
 }
 
 fn main() {
-	unsafe { run() }
+	// unsafe { run() }
+	let ui = UI::init().expect("Couldn't initialize UI");
+	let mut window = controls::Window::new(
+		&ui,
+		"evacuation",
+		800,
+		600,
+		controls::WindowType::HasMenubar
+	);
+
+	window.show(&ui);
+
+	ui.main();
 }
