@@ -33,6 +33,11 @@ void applying_scenario_bim_params(bim_t* bim, const bim_cfg_scenario_t* cfg_scen
 
 int run ()
 {
+// TODO: разобраться с кодировкой в windows
+#ifdef _WIN32
+    system("chcp 65001");
+#endif
+
     const cli_params_t       *cli_params       = read_cl_args();
     const bim_cfg_scenario_t *bim_cfg_scenario = bim_cfg_load(cli_params->scenario_file);
 
@@ -154,6 +159,9 @@ int run ()
         bim_graph_free(graph);
         bim_tools_free(bim);
     }
+#ifdef _WIN32
+    system("chcp 866");
+#endif
 }
 
 void applying_scenario_bim_params(bim_t* bim, const bim_cfg_scenario_t* cfg_scenario)
