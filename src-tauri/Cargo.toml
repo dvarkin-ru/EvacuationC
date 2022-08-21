@@ -13,11 +13,18 @@ rust-version = "1.57"
 
 [build-dependencies]
 tauri-build = { version = "1.0.4", features = [] }
+cc = { version = "1.0", features = ["parallel"] }
 
 [dependencies]
 serde_json = "1.0"
 serde = { version = "1.0", features = ["derive"] }
 tauri = { version = "1.0.5", features = ["api-all"] }
+cli = { path = "../src/cli" }
+configuration = { path = "../src/configuration" }
+json_object = { path = "../src/json_object" }
+bim_cli = { path = "../src/bim_cli" }
+bim_configure = { path = "../src/bim_configure" }
+bim_json_object = { path = "../src/bim_json_object" }
 
 [features]
 # by default Tauri runs in production mode
