@@ -101,9 +101,21 @@ int run ()
         applying_scenario_bim_params(bim, bim_cfg_scenario);
 
         // Files with results
-        char *output_detail = bim_create_file_name(filename, OUTPUT_DETAIL_FILE, OUTPUT_SUFFIX);
-        char *output_short  = bim_create_file_name(filename, OUTPUT_SHORT_FILE,  OUTPUT_SUFFIX);
+        char *out_file;
+#if defined(_WIN32) || defined(_WIN64)
+        out_file = (char *)calloc(strlen(OUTPUT_DIR) + strlen(filename) + 3, sizeof(char));
+        strcpy(out_file, OUTPUT_DIR);
+        strcat(out_file, "\\\\");
+#else
+        out_file = (char *)calloc(strlen(OUTPUT_DIR) + strlen(filename) + 2, sizeof(char));
+        strcpy(out_file, OUTPUT_DIR);
+        strcat(out_file, "/");
+#endif
+        strcat(out_file, filename);
+        char *output_detail = bim_create_file_name(out_file, OUTPUT_DETAIL_FILE, OUTPUT_SUFFIX);
+        char *output_short  = bim_create_file_name(out_file, OUTPUT_SHORT_FILE,  OUTPUT_SUFFIX);
         free(filename);
+        free(out_file);
 
         FILE *fp_detail = fopen(output_detail, "w+");
         LOG_TRACE("Created file for detailed information about flows pedestrian: %s", output_detail);

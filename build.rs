@@ -29,5 +29,5 @@ fn main() {
 		.includes(headers_dirs.iter())
 		.warnings(true)
 		.extra_warnings(true)
-		.compile("libarraylist.a");
+		.compile("libevacuationc.a");
 }
