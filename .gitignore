@@ -27,6 +27,7 @@
 !package.json
 
 !index.html
+!vite.config.js
 !src-ui/
 !src-ui/**/*
 
