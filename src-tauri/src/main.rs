@@ -17,14 +17,14 @@ extern "C" {
 
 fn main() {
 	tauri::Builder::default()
-		.invoke_handler(tauri::generate_handler![start])
+		.invoke_handler(tauri::generate_handler![read_config])
 		.run(tauri::generate_context!())
 		.expect("error while running tauri application");
 }
 
 #[tauri::command]
-fn start() {
-	fs::create_dir_all("result").expect("Не удалось создать папку result");
-	unsafe { run() }
-	println!("Hello from Rust!");
+fn read_config() -> configuration::ScenarioCfg {
+	let config = configuration::load_cfg("../scenario.json")
+		.expect("Не удалось прочитать файл конфигурации");
+	config
 }
