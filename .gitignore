@@ -24,10 +24,11 @@
 !src-tauri/
 !src-tauri/**/*
 
-!package.json
+!package*.json
 
 !index.html
-!vite.config.js
+!config.html
+!vite.config.ts
 !src-ui/
 !src-ui/**/*
 

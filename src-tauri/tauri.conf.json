@@ -55,11 +55,22 @@
     },
     "windows": [
       {
+        "url": "index.html",
         "fullscreen": false,
-        "height": 600,
         "resizable": true,
         "title": "evacuation",
-        "width": 800
+        "label": "evacuation",
+        "width": 800,
+        "height": 600
+      },
+      {
+        "url": "config.html",
+        "fullscreen": false,
+        "resizable": true,
+        "title": "configuration",
+        "label": "configuration",
+        "width": 800,
+        "height": 600
       }
     ]
   }
