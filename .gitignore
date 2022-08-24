@@ -25,10 +25,11 @@
 !src-tauri/**/*
 
 !package*.json
+!vite.config.ts
+!tsconfig*.json
 
 !index.html
 !config.html
-!vite.config.ts
 !src-ui/
 !src-ui/**/*
 
