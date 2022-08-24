@@ -29,7 +29,7 @@
 !tsconfig*.json
 
 !index.html
-!config.html
+!src-ui/config/index.html
 !src-ui/
 !src-ui/**/*
 

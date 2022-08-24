@@ -3,9 +3,13 @@ root = true
 [*]
 charset = utf-8
 end_of_line = lf
-insert_final_newline = false
-tab_width = 4
-
-[*.{c,h,rs,html,css,js}]
-indent_style = tab
+indent_style = space
 indent_size = 4
+insert_final_newline = false
+trim_trailing_whitespace = true
+
+[*.{c,h,rs,html,css,ts}]
+indent_style = tab
+
+[*.md]
+trim_trailing_whitespace = false

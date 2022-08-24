@@ -64,7 +64,7 @@
         "height": 600
       },
       {
-        "url": "config.html",
+        "url": "src-ui/config/index.html",
         "fullscreen": false,
         "resizable": true,
         "title": "configuration",

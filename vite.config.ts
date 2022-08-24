@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react';
+import * as path from "path";
 
 export default defineConfig({
 	plugins: [react()],
@@ -20,5 +21,11 @@ export default defineConfig({
 		minify: !process.env.TAURI_DEBUG ? 'esbuild' : false,
 		// produce sourcemaps for debug builds
 		sourcemap: !!process.env.TAURI_DEBUG,
+        rollupOptions: {
+            input: {
+                main: path.resolve(__dirname, 'index.html'),
+                configuration: path.resolve(__dirname, 'src-ui', 'config', 'index.html')
+            }
+        }
 	},
 })
