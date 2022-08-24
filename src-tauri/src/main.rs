@@ -3,7 +3,6 @@ all(not(debug_assertions), target_os = "windows"),
 windows_subsystem = "windows"
 )]
 
-use tauri::{CustomMenuItem, Menu, MenuItem, Submenu};
 use cli;
 use configuration;
 use json_object;
@@ -11,9 +10,7 @@ use bim_cli;
 use bim_configure;
 use bim_json_object;
 
-extern "C" {
-	fn run();
-}
+mod run_bindings;
 
 fn main() {
 	tauri::Builder::default()
