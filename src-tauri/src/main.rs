@@ -20,8 +20,6 @@ fn main() {
 }
 
 #[tauri::command]
-fn read_config() -> configuration::ScenarioCfg {
-	let config = configuration::load_cfg("../scenario.json")
-		.expect("Не удалось прочитать файл конфигурации");
-	config
+fn read_config() -> Result<configuration::ScenarioCfg, String> {
+	configuration::load_cfg("../scenario.json")
 }
