@@ -27,6 +27,7 @@
 !package*.json
 !vite.config.ts
 !tsconfig*.json
+!.prettier*
 
 !index.html
 !src-ui/config/index.html
