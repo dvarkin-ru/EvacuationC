@@ -1,4 +1,4 @@
-import {invoke} from "@tauri-apps/api";
+import { invoke } from '@tauri-apps/api';
 
 enum DistributionType {
 	FromBim,
@@ -11,46 +11,47 @@ enum TransitionType {
 }
 
 type ScenarioCfg = {
-	files: string[],
-	logger_config: string,
+	files: string[];
+	logger_config: string;
 	distribution: {
-		distribution_type: DistributionType,
-		density: number,
+		distribution_type: DistributionType;
+		density: number;
 		special: {
-			uuid: string[],
-			density: number,
-			comment: string
-		}[]
-	},
+			uuid: string[];
+			density: number;
+			comment: string;
+		}[];
+	};
 	transition: {
-		transition_type: TransitionType,
-		doorway_in: number,
-		doorway_out: number,
+		transition_type: TransitionType;
+		doorway_in: number;
+		doorway_out: number;
 		special: {
-			uuid: string[],
-			width: number,
-			comment: string
-		}[]
-	},
+			uuid: string[];
+			width: number;
+			comment: string;
+		}[];
+	};
 	modeling: {
-		step: number,
-		max_speed: number,
-		max_density: number,
-		min_density: number
-	}
-}
+		step: number;
+		max_speed: number;
+		max_density: number;
+		min_density: number;
+	};
+};
 
 (document.getElementById('start-btn') as HTMLElement).addEventListener('click', async _ => {
 	try {
-		let config = await invoke('read_config') as ScenarioCfg;
-		(document.querySelector('.config__files') as HTMLElement)
-			.innerHTML = config.files.reduce((filenameElements, pathToFile) =>
-				filenameElements.concat(`<li>${pathToFile}</li>`), '');
+		let config = (await invoke('read_config')) as ScenarioCfg;
+		(document.querySelector('.config__files') as HTMLElement).innerHTML = config.files.reduce(
+			(filenameElements, pathToFile) => filenameElements.concat(`<li>${pathToFile}</li>`),
+			''
+		);
 	} catch (errorMessage) {
-		const configElement = (document.querySelector('.config') as HTMLElement);
+		const configElement = document.querySelector('.config') as HTMLElement;
 		configElement.innerHTML = `
 			<p>
-				${typeof errorMessage === 'string' ? errorMessage : "Произошла неизвестная ошибка"}
+				${typeof errorMessage === 'string' ? errorMessage : 'Произошла неизвестная ошибка'}
 			</p>
 		`;
 	} finally {
