@@ -1,7 +1,8 @@
-**/.git
-**/node_modules
+*
 
-*.json
-*.md
-*.yml
-*.toml
+!package.json
+!tsconfig*.json
+!vite.config.ts
+!index.html
+!src-ui/
+!src-ui/**/*

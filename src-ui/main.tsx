@@ -1,6 +1,5 @@
 import * as ReactDOM from 'react-dom/client';
-import { invoke } from "@tauri-apps/api";
-import App from "./App";
+import App from './App';
 
 (document.getElementById('file_input') as HTMLInputElement).addEventListener('change', e => {
 	console.log((e.target as HTMLInputElement).value);
@@ -8,8 +7,8 @@ import App from "./App";
 
 const rootElement = document.querySelector('#root');
 if (rootElement) {
-    const root = ReactDOM.createRoot(rootElement);
-    root.render(<App />);
+	const root = ReactDOM.createRoot(rootElement);
+	root.render(<App />);
 } else {
-    console.error('Root element not found');
+	console.error('Root element not found');
 }
