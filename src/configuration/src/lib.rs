@@ -90,6 +90,6 @@ pub fn load_cfg (path_to_file: &str) -> Result<ScenarioCfg, String> {
 
 			Ok(cfg)
 		},
-		false => Err(String::from("Не удалось найти указанный файл"))
+		false => Err(format!("Не удалось найти указанный файл: {}", path_to_file))
 	}
 }
