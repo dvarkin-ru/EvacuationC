@@ -43,21 +43,17 @@ type ScenarioCfg = {
 (document.getElementById('start-btn') as HTMLElement).addEventListener('click', async _ => {
 	try {
 		let config = await invoke('read_config') as ScenarioCfg;
-		let filesListElement = document.createElement('ul');
-		let fileElements = config.files.map(file => {
-			const fileElement = document.createElement('li');
-			fileElement.innerText = file;
-			return fileElement;
-		});
-		filesListElement.append(...fileElements);
-		const outputElement = (document.querySelector('#config-output') as HTMLElement);
-		outputElement.innerHTML = '';
-		outputElement.appendChild(filesListElement);
+		(document.querySelector('.config__files') as HTMLElement)
+			.innerHTML = config.files.reduce((filenameElements, pathToFile) =>
+				filenameElements.concat(`<li>${pathToFile}</li>`), '');
 	} catch (errorMessage) {
-		(document.querySelector('#config-output') as HTMLElement).innerHTML = `
+		const configElement = (document.querySelector('.config') as HTMLElement);
+		configElement.innerHTML = `
 			<p>
 				${typeof errorMessage === 'string' ? errorMessage : "Произошла неизвестная ошибка"}
 			</p>
 		`;
+	} finally {
+		(document.querySelector('.config') as HTMLDivElement).style.display = 'block';
 	}
 });
