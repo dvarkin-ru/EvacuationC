@@ -1,1 +1,0 @@
-Js.Console.log(`hello from rescript`)

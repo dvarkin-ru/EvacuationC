@@ -8,6 +8,10 @@ body {
 	padding: 0;
 }
 
+.title-main {
+	font-size: 1em;
+}
+
 .config {
 	display: none;
 }
