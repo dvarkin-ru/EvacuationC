@@ -26,6 +26,7 @@
 
 !package*.json
 !vite.config.ts
+!bsconfig.json
 !tsconfig*.json
 !.prettier*
 !.husky

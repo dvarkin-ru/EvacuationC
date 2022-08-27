@@ -5,8 +5,12 @@
 	"type": "module",
 	"description": "**EvacuationC** -- программа моделирования движения людей в здании.",
 	"scripts": {
-		"dev": "vite",
-		"build": "tsc && vite build",
+		"dev": "concurrently \"npm:dev:*\"",
+		"dev:rescript": "rescript build -w",
+		"dev:vite": "vite",
+		"build": "tsc && rescript && npm vite build",
+		"build:rescript": "rescript",
+		"build:vite": "vite build",
 		"preveiw": "vite preview",
 		"tauri": "tauri"
 	},
