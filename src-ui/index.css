@@ -8,10 +8,6 @@ body {
 	padding: 0;
 }
 
-.config-error {
-	display: none;
-}
-
-.config {
-	display: none;
+.title-main {
+	font-size: 1em;
 }
