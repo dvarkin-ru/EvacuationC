@@ -28,12 +28,8 @@
 !vite.config.ts
 !bsconfig.json
 !tsconfig*.json
-!.prettier*
-!.husky
-!.husky/**/*
 
 !index.html
-!src-ui/config/index.html
 !src-ui/
 !src-ui/**/*
 

@@ -1,1 +1,1 @@
-Js.Console.log(`reason was added successfully`)
+Js.Console.log(`hello from rescript`)
