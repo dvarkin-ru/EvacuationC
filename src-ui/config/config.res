@@ -1,9 +1,42 @@
-%%raw(`
-import { invoke } from '@tauri-apps/api';
+open Webapi.Dom
 
+%%raw(`import { invoke } from '@tauri-apps/api';`)
+
+// TODO: complete binding
+@module("@tauri-apps/api") external invoke: (string, ~args: {..}=?) => Promise.t<string> = "invoke"
+
+let unexpectedErrorHandler = (errorMessage: string) => {
+    switch document->Document.querySelector(".config") {
+    | Some(configElement) => {
+        configElement
+        ->Element.unsafeAsHtmlElement
+        ->HtmlElement.style
+        ->CssStyleDeclaration.setPropertyValue("display", "none")
+    }
+    | None => Js.log("No config element found")
+    }
+}
+
+let loadConfigHandler = _ => {
+    try {
+        // let config = invoke("read_config")
+        Js.log("Config loaded")
+    } catch {
+    | Js.Exn.Error(obj) => {
+        unexpectedErrorHandler("Error on config loading")
+    }
+    }
+}
+
+switch document->Document.getElementById("start-btn") {
+| Some(startButton) => startButton->Element.addClickEventListener(loadConfigHandler)
+| None => Js.log("No start button found")
+}
+
+%%raw(`
 document.getElementById('start-btn').addEventListener('click', async _ => {
 	try {
-		let config = await invoke('read_config');
+        let config = await invoke('read_config');
 		document.querySelector('.config__bim-files').innerHTML =
 			config.files.reduce(
 				(filenameElements, pathToFile) => filenameElements.concat(\`<li>\${pathToFile}</li>\`),
@@ -14,12 +47,12 @@ document.getElementById('start-btn').addEventListener('click', async _ => {
 			config.logger_config;
 
 
-			document.querySelector('.distribution-type')
-		.innerText = \`Тип: \${config.distribution.distribution_type}\`;
+        document.querySelector('.distribution-type')
+		    .innerText = \`Тип: \${config.distribution.distribution_type}\`;
 
 
-			document.querySelector('.distribution-density')
-		.innerText = \`Плотность: \${config.distribution.density}\`;
+        document.querySelector('.distribution-density')
+		    .innerText = \`Плотность: \${config.distribution.density}\`;
 
 		document.querySelector('.distribution-special').innerHTML =
 			config.distribution.special.reduce(
@@ -37,16 +70,16 @@ document.getElementById('start-btn').addEventListener('click', async _ => {
 			);
 
 
-			document.querySelector('.transitions-type')
-		.innerText = \`Тип: \${config.transition.transitions_type}\`;
+        document.querySelector('.transitions-type')
+		    .innerText = \`Тип: \${config.transition.transitions_type}\`;
 
 
-			document.querySelector('.transitions-doorway-in')
-		.innerText = \`Doorway in: \${config.transition.doorway_in}\`;
+        document.querySelector('.transitions-doorway-in')
+		    .innerText = \`Doorway in: \${config.transition.doorway_in}\`;
 
 
-			document.querySelector('.transitions-doorway-out')
-		.innerText = \`Doorway out: \${config.transition.doorway_out}\`;
+        document.querySelector('.transitions-doorway-out')
+		    .innerText = \`Doorway out: \${config.transition.doorway_out}\`;
 
 		document.querySelector('.transitions-special').innerHTML =
 			config.transition.special.reduce(
@@ -64,20 +97,20 @@ document.getElementById('start-btn').addEventListener('click', async _ => {
 			);
 
 
-			document.querySelector('.modeling-step')
-		.innerText = \`Шаг: \${config.modeling.step}\`;
+        document.querySelector('.modeling-step')
+		    .innerText = \`Шаг: \${config.modeling.step}\`;
 
 
-			document.querySelector('.modeling-max-speed')
-		.innerText = \`Максимальная скорость: \${config.modeling.max_speed}\`;
+        document.querySelector('.modeling-max-speed')
+		    .innerText = \`Максимальная скорость: \${config.modeling.max_speed}\`;
 
 
-			document.querySelector('.modeling-max-density')
-		.innerText = \`Максимальная плотность: \${config.modeling.max_density}\`;
+        document.querySelector('.modeling-max-density')
+            .innerText = \`Максимальная плотность: \${config.modeling.max_density}\`;
 
 
-			document.querySelector('.modeling-min-density')
-		.innerText = \`Минимальная плотность: \${config.modeling.min_density}\`;
+        document.querySelector('.modeling-min-density')
+		    .innerText = \`Минимальная плотность: \${config.modeling.min_density}\`;
 
 		document.querySelector('.config-error').style.display = 'none';
 		document.querySelector('.config').style.display = 'block';

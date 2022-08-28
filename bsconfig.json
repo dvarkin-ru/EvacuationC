@@ -13,5 +13,9 @@
     "bsc-flags": ["-bs-super-errors"],
     "warnings": {
         "error" : "+101"
-    }
+    },
+    "bs-dependencies": [
+        "@ryyppy/rescript-promise",
+        "rescript-webapi"
+    ]
 }

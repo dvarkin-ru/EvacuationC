@@ -8,7 +8,7 @@
 		"dev": "concurrently \"npm:dev:*\"",
 		"dev:rescript": "rescript build -w",
 		"dev:vite": "vite",
-		"build": "tsc && rescript && npm vite build",
+		"build": "rescript && vite build",
 		"build:rescript": "rescript",
 		"build:vite": "vite build",
 		"preveiw": "vite preview",
@@ -21,6 +21,8 @@
 		"vite": "^3.0.8"
 	},
 	"dependencies": {
-		"@tauri-apps/api": "^1.0.2"
+		"@ryyppy/rescript-promise": "^2.1.0",
+		"@tauri-apps/api": "^1.0.2",
+		"rescript-webapi": "^0.6.1"
 	}
 }
