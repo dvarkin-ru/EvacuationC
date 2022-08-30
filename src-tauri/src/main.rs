@@ -3,6 +3,7 @@ all(not(debug_assertions), target_os = "windows"),
 windows_subsystem = "windows"
 )]
 
+use std::error::Error;
 use cli;
 use configuration;
 use json_object;
@@ -20,6 +21,6 @@ fn main() {
 }
 
 #[tauri::command]
-fn read_config() -> Result<configuration::ScenarioCfg, String> {
+fn read_config() -> Result<configuration::ScenarioCfg, configuration::LoadCfgError> {
 	configuration::load_cfg("../scenario.json")
 }

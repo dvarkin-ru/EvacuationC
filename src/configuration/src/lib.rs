@@ -77,7 +77,20 @@ pub struct ScenarioCfg {
 	pub modeling: Modeling
 }
 
-pub fn load_cfg (path_to_file: &str) -> Result<ScenarioCfg, String> {
+#[derive(Debug, Serialize)]
+pub struct LoadCfgError {
+	pub message: String
+}
+
+impl std::fmt::Display for LoadCfgError {
+	fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+		write!(f, "LoadCfgError: {}", self.message)
+	}
+}
+
+impl Error for LoadCfgError {}
+
+pub fn load_cfg (path_to_file: &str) -> Result<ScenarioCfg, LoadCfgError> {
 	match Path::new(path_to_file).exists() {
 		true => {
 			let json_content = fs::read_to_string(path_to_file).unwrap_or_else(|err| {
@@ -90,6 +103,8 @@ pub fn load_cfg (path_to_file: &str) -> Result<ScenarioCfg, String> {
 
 			Ok(cfg)
 		},
-		false => Err(format!("Не удалось найти указанный файл: {}", path_to_file))
+		false => Err(LoadCfgError {
+			message: format!("Не удалось найти указанный файл: {}", path_to_file)
+		})
 	}
 }
