@@ -4,20 +4,25 @@
     "../res/one_zone_one_exit.json",
     "../res/three_zone_three_transit.json",
     "../res/building_test.json",
-    "../res/udsu_block_1.json"
+    "../res/udsu_block_1.json",
+    "../res/udsu_block_2.json",
+    "../res/udsu_block_3.json",
+    "../res/udsu_block_4.json",
+    "../res/udsu_block_5.json",
+    "../res/udsu_block_7.json"
   ],
   "logger_configure": "../logger.conf",
   "distribution": {
-    "type":"uniform",
+    "type": "uniform",
     "density": 0.1,
     "special": [
-        {
-            "uuid": [
-            "87c49613-44a7-4f3f-82e0-fb4a9ca2f46d"
-            ],
-            "density": 1.0,
-            "_comment": "The uuid is Room_1 by three_zone_three_transit"
-        }
+      {
+        "uuid": [
+          "87c49613-44a7-4f3f-82e0-fb4a9ca2f46d"
+        ],
+        "density": 1.0,
+        "_comment": "The uuid is Room_1 by three_zone_three_transit"
+      }
     ]
   },
   "transits": {
@@ -25,13 +30,13 @@
     "doorwayin": 0,
     "doorwayout": 0,
     "special": [
-        {
-            "uuid": [
-            "dcbd8b6e-6dd0-4583-8aac-2492797f8032"
-            ],
-            "width": 1.5,
-            "_comment": "The uuid is output by three_zone_three_transit"
-        }
+      {
+        "uuid": [
+          "dcbd8b6e-6dd0-4583-8aac-2492797f8032"
+        ],
+        "width": 1.5,
+        "_comment": "The uuid is output by three_zone_three_transit"
+      }
     ]
   },
   "modeling": {
