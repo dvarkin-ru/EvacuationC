@@ -16,52 +16,6 @@
 #include "bim_polygon_tools.h"
 #include "triangle.h"
 
-// https://userpages.umbc.edu/~rostamia/cbook/triangle.html
-/// @return Массив номеров точек треугольников
-static size_t _triangle_polygon(const polygon_t *const polygon, int *trianglelist)
-{
-    struct triangulateio in;
-    size_t numofpoints = polygon->numofpoints/* - 1*/;
-    REAL *pointlist = (REAL *)NULL;
-    pointlist = (REAL *)calloc(numofpoints * 2, sizeof(REAL));
-
-    size_t counter = 0;
-    for (size_t i = 0; i < numofpoints; i++)
-    {
-        pointlist[counter++] = polygon->points[i].x;
-        pointlist[counter++] = polygon->points[i].y;
-    }
-
-    in.pointlist = pointlist;
-    in.pointattributelist = (REAL *) NULL;
-    in.pointmarkerlist = (int *) NULL;
-    in.numberofpoints = numofpoints;
-    in.trianglelist = trianglelist;  // Индексы точек треугольников против часовой стрелки
-    in.numberofpointattributes = 0;
-    in.triangleattributelist = NULL;
-    in.trianglearealist = NULL;
-    in.neighborlist = NULL;
-    in.numberoftriangles = 0;
-    in.numberofcorners = 0;
-    in.numberoftriangleattributes = 0;
-    in.segmentlist = NULL;
-    in.segmentmarkerlist = NULL;
-    in.numberofsegments = 0;
-    in.holelist = NULL;
-    in.numberofholes = 0;
-    in.regionlist = NULL;
-    in.numberofregions = 0;
-    in.edgelist = NULL;
-    in.edgemarkerlist = NULL;
-    in.normlist = NULL;
-    in.numberofedges = 0;
-
-    char *triswitches = "zQ";
-    triangulate(triswitches, &in, &in, NULL);
-    free(pointlist);
-    return (size_t)in.numberoftriangles;
-}
-
 double geom_tools_length_side(const point_t *const p1, const point_t *const p2)
 {
     return sqrt(pow(p1->x - p2->x, 2) + pow(p1->y - p2->y, 2));
@@ -69,74 +23,31 @@ double geom_tools_length_side(const point_t *const p1, const point_t *const p2)
 
 double geom_tools_area_polygon(const polygon_t *const polygon)
 {
-    size_t numof_triangle_corner = (polygon->numofpoints - 2) * 3;
-
-    int *trianglelist = (int*)NULL;
-    trianglelist = (int*)calloc(numof_triangle_corner, sizeof (int));
-    if (!trianglelist) {
-        return -1;
+    // https://ru.wikipedia.org/wiki/Формула_площади_Гаусса
+    size_t n = polygon->numofpoints;
+    double sum = polygon->points[n].x * polygon->points[0].y - polygon->points[0].x * polygon->points[n].y;
+    for (size_t i = 0; i < n; i++) {
+      sum += polygon->points[i].x * polygon->points[i+1].y - polygon->points[i+1].x * polygon->points[i].y;
     }
-
-    size_t numberoftriangles = _triangle_polygon(polygon, trianglelist);
-
-    //Вычисляем площадь по формуле S=(p(p-ab)(p-bc)(p-ca))^0.5;
-    //p=(ab+bc+ca)0.5
-    double areaElement = 0;
-    for (size_t i = 0, start_corner = 0; i < numberoftriangles; ++i, start_corner = i * 3)
-    {
-        const point_t *a = &polygon->points[trianglelist[start_corner+0]];
-        const point_t *b = &polygon->points[trianglelist[start_corner+1]];
-        const point_t *c = &polygon->points[trianglelist[start_corner+2]];
-        double ab = geom_tools_length_side(a, b);
-        double bc = geom_tools_length_side(b, c);
-        double ca = geom_tools_length_side(c, a);
-        double p = (ab + bc + ca) * 0.5;
-        areaElement += sqrt(p * (p - ab) * (p - bc) * (p - ca));
-    }
-
-    free(trianglelist);
-    return areaElement;
+    return 0.5*fabs(sum);
 }
 
-static int _where_point(double aAx, double aAy, double aBx, double aBy, double aPx, double aPy)
-{
-    double s = (aBx - aAx) * (aPy - aAy) - (aBy - aAy) * (aPx - aAx);
-    if (s > 0) return 1;        // Точка слева от вектора AB
-    else if(s < 0) return -1;   // Точка справа от вектора AB
-    else return 0;              // Точка на векторе, прямо по вектору или сзади вектора
-}
-
-static uint8_t _is_point_in_triangle(double aAx, double aAy, double aBx, double aBy, double aCx, double aCy, double aPx, double aPy)
-{
-    int q1 = _where_point(aAx, aAy, aBx, aBy, aPx, aPy);
-    int q2 = _where_point(aBx, aBy, aCx, aCy, aPx, aPy);
-    int q3 = _where_point(aCx, aCy, aAx, aAy, aPx, aPy);
-
-    return (q1 >= 0 && q2 >= 0 && q3 >= 0);
+uint8_t _on_segment(const point_t *const a, const point_t *const b, const point_t *const c) {
+    if (geom_tools_length_side(a, b) + geom_tools_length_side(b, c) == geom_tools_length_side(a, c)) return 1;
+    return 0;
 }
 
 uint8_t geom_tools_is_point_in_polygon(const point_t *const point, const polygon_t *const polygon)
 {
-    size_t numof_triangle_corner = (polygon->numofpoints - 2) * 3;
-
-    int *trianglelist = NULL;
-    trianglelist = (int *)calloc(numof_triangle_corner, sizeof(int));
-    if (!trianglelist) {
-        return -1;
+    // https://web.archive.org/web/20161108113341/https://www.ecse.rpi.edu/Homepages/wrf/Research/Short_Notes/pnpoly.html
+    uint8_t c = 0;
+    for (size_t i = 0, j = polygon->numofpoints-1; i < polygon->numofpoints; j = i++) {
+      if (_on_segment(&polygon->points[i], point, &polygon->points[i+1])) return 1;
+      if ( ((polygon->points[i].y > point->y) != (polygon->points[j].y>point->y)) &&
+	   (point->x < (polygon->points[j].x-polygon->points[i].x) * (point->y-polygon->points[i].y) / (polygon->points[j].y-polygon->points[i].y) + polygon->points[i].x) )
+         c = !c;
     }
-
-    size_t numberoftriangles = _triangle_polygon(polygon, trianglelist);
-    uint8_t result = 0;
-    for (size_t i = 0, start_corner = 0; i < numberoftriangles; ++i, start_corner = i * 3)
-    {
-        const point_t *a = &polygon->points[trianglelist[start_corner + 0]];
-        const point_t *b = &polygon->points[trianglelist[start_corner + 1]];
-        const point_t *c = &polygon->points[trianglelist[start_corner + 2]];
-        result = _is_point_in_triangle(a->x, a->y, b->x, b->y, c->x, c->y, point->x, point->y);
-        if (result == 1) break;
-    }
-    free(trianglelist);
-    return result;
+    return c;
 }
 
 // signed area of a triangle
